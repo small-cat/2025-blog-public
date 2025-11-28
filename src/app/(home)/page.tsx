@@ -21,12 +21,12 @@ export default function Home() {
 			<HiCard />
 			{!maxSM && <ClockCard />}
 			{!maxSM && <CalendarCard />}
-			{!maxSM && <MusicCard />}
+			{/* {!maxSM && <MusicCard />} */}
 			<SocialButtons />
-			{!maxSM && <ShareCard />}
+			{/* {!maxSM && <ShareCard />} */}
 			<AritcleCard />
 			{!maxSM && <WriteButtons />}
-			<LikePosition />
+			{ /*<LikePosition /> */}
 		</div>
 	)
 }
