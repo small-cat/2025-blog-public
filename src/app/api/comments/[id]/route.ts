@@ -25,7 +25,7 @@ export async function POST(
     const commentData = await request.json()
     const newComment = addComment({
       ...commentData,
-      articleId: params.id,
+      articleId: id,
     })
     return NextResponse.json(newComment, { status: 201 })
   } catch (error) {

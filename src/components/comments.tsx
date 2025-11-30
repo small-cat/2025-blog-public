@@ -235,7 +235,7 @@ export function Comments({ articleId }: CommentsProps) {
               {comment.replies && comment.replies.length > 0 && (
                 <div className="mt-4 ml-6 space-y-4 border-l-2 border-gray-200 pl-4">
                   {comment.replies.map((reply) => (
-                    <div className="pb-2">
+                    <div key={reply.id} className="pb-2">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-semibold">{reply.author}</span>
                         <span className="text-xs text-gray-500">

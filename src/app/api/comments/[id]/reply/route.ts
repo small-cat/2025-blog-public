@@ -15,7 +15,7 @@ export async function POST(
       return NextResponse.json({ error: 'Parent comment ID is required' }, { status: 400 })
     }
 
-    const newReply = addReply(params.id, parentCommentId, reply)
+    const newReply = addReply(id, parentCommentId, reply)
     return NextResponse.json(newReply, { status: 201 })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to add reply' }, { status: 500 })

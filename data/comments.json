@@ -2,12 +2,14 @@
   {
     "author": "呵呵",
     "content": "挺好",
+    "articleId": "webpack-react",
     "id": "1764346045694",
     "createdAt": "2025-11-28T16:07:25.694Z",
     "replies": [
       {
         "author": "test1",
         "content": "感谢",
+        "articleId": "webpack-react",
         "id": "1764346063451-reply",
         "createdAt": "2025-11-28T16:07:43.451Z"
       }
@@ -16,12 +18,14 @@
   {
     "author": "hehe",
     "content": "heheheh",
+    "articleId": "webpack-react",
     "id": "1764473186213",
     "createdAt": "2025-11-30T03:26:26.213Z",
     "replies": [
       {
         "author": "test",
         "content": "1",
+        "articleId": "webpack-react",
         "id": "1764473194862-reply",
         "createdAt": "2025-11-30T03:26:34.862Z"
       }
@@ -30,12 +34,14 @@
   {
     "author": "test2",
     "content": "test2....",
+    "articleId": "webpack-react",
     "id": "1764473273680",
     "createdAt": "2025-11-30T03:27:53.680Z",
     "replies": [
       {
         "author": "r2test2",
         "content": "r2test2...",
+        "articleId": "webpack-react",
         "id": "1764474599838-reply",
         "createdAt": "2025-11-30T03:49:59.838Z"
       }
@@ -44,12 +50,14 @@
   {
     "author": "呵呵",
     "content": "tttt.",
+    "articleId": "webpack-react",
     "id": "1764474754311",
     "createdAt": "2025-11-30T03:52:34.311Z",
     "replies": [
       {
         "author": "rep",
         "content": "rep...",
+        "articleId": "webpack-react",
         "id": "1764474762701-reply",
         "createdAt": "2025-11-30T03:52:42.701Z"
       }
@@ -58,30 +66,44 @@
   {
     "author": "呵呵",
     "content": "sfdsf",
+    "articleId": "webpack-react",
     "id": "1764476037172",
     "createdAt": "2025-11-30T04:13:57.172Z"
   },
   {
     "author": "呵呵",
     "content": "fdf",
+    "articleId": "webpack-react",
     "id": "1764476086548",
-    "createdAt": "2025-11-30T04:14:46.548Z"
+    "createdAt": "2025-11-30T04:14:46.548Z",
+    "replies": [
+      {
+        "author": "test 2",
+        "content": "reply to fdf ,..",
+        "articleId": "webpack-react",
+        "id": "1764485468505-reply",
+        "createdAt": "2025-11-30T06:51:08.505Z"
+      }
+    ]
   },
   {
     "author": "呵呵",
     "content": "test comments ...",
+    "articleId": "webpack-react",
     "id": "1764483436690",
     "createdAt": "2025-11-30T06:17:16.690Z",
     "replies": [
       {
         "author": "test1",
         "content": "reply test1...",
+        "articleId": "webpack-react",
         "id": "1764483460968-reply",
         "createdAt": "2025-11-30T06:17:40.968Z"
       },
       {
         "author": "test2",
         "content": "reply test2 ...",
+        "articleId": "webpack-react",
         "id": "1764483489767-reply",
         "createdAt": "2025-11-30T06:18:09.767Z"
       }
