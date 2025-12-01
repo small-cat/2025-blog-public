@@ -18,6 +18,10 @@ export const GITHUB_CONFIG = {
 ```
 
 也可以自己手动先调整安装，可自行 `pnpm i`
+```shell
+pnpm i
+npm run dev # run as local server
+```
 
 ## 2. 部署
 

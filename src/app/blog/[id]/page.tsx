@@ -93,7 +93,8 @@ export default function Page() {
 
 			{slug === 'liquid-grass' && <LiquidGrass />}
 
-			<Comments articleId={slug} />
+			{ /* vercel serverless 部署，是只读文件系统，不能保存和写文件 */}
+			{ /* <Comments articleId={slug} /> */}
 		</>
 	)
 }
