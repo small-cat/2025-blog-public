@@ -10,6 +10,7 @@ interface Comment {
   content: string
   author: string
   createdAt: string
+  avatar?: string
   replies?: Comment[]
 }
 
@@ -166,11 +167,18 @@ export function Comments({ articleId }: CommentsProps) {
         <div className="space-y-6">
           {comments.map((comment) => (
             <div key={comment.id} className="border-b border-gray-100 pb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold">{comment.author}</span>
-                <span className="text-sm text-gray-500">
-                  {dayjs(comment.createdAt).format('YYYY年 M月 D日')}
-                </span>
+              <div className="flex items-center gap-3 mb-2">
+                <img
+                  src={comment.avatar || '/images/avatar.png'}
+                  alt={comment.author}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="flex items-center justify-between grow">
+                  <span className="font-semibold">{comment.author}</span>
+                  <span className="text-sm text-gray-500">
+                    {dayjs(comment.createdAt).format('YYYY年 M月 D日')}
+                  </span>
+                </div>
               </div>
 
               <p className="mb-3">{comment.content}</p>
@@ -236,11 +244,18 @@ export function Comments({ articleId }: CommentsProps) {
                 <div className="mt-4 ml-6 space-y-4 border-l-2 border-gray-200 pl-4">
                   {comment.replies.map((reply) => (
                     <div key={reply.id} className="pb-2">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-semibold">{reply.author}</span>
-                        <span className="text-xs text-gray-500">
-                          {dayjs(reply.createdAt).format('YYYY年 M月 D日')}
-                        </span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <img
+                          src={reply.avatar || '/images/avatar.png'}
+                          alt={reply.author}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                        <div className="flex items-center justify-between grow">
+                          <span className="text-sm font-semibold">{reply.author}</span>
+                          <span className="text-xs text-gray-500">
+                            {dayjs(reply.createdAt).format('YYYY年 M月 D日')}
+                          </span>
+                        </div>
                       </div>
                       <p className="text-sm">{reply.content}</p>
                     </div>

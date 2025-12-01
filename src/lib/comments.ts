@@ -7,6 +7,7 @@ export interface Comment {
   content: string
   author: string
   createdAt: string
+  avatar?: string
   replies?: Comment[]
 }
 
@@ -60,15 +61,26 @@ export const getComments = (articleId: string): Comment[] => {
 }
 
 // Add a new comment
-export const addComment = (comment: Omit<Comment, 'id' | 'createdAt' | 'replies'>): Comment => {
+export const addComment = (comment: Omit<Comment, 'id' | 'createdAt' | 'replies' | 'avatar'>): Comment => {
   ensureCommentsFile()
   const commentsData = fs.readFileSync(COMMENTS_FILE, 'utf-8')
   const comments: Comment[] = JSON.parse(commentsData)
+
+  // Available avatar images
+  const avatars = [
+    '/images/avatar.png',
+    '/images/avatar2.png',
+    '/images/avatar-girl.png',
+  ]
+
+  // Assign a random avatar
+  const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)]
 
   const newComment: Comment = {
     ...comment,
     id: Date.now().toString(),
     createdAt: new Date().toISOString(),
+    avatar: randomAvatar,
   }
 
   comments.push(newComment)
@@ -78,7 +90,7 @@ export const addComment = (comment: Omit<Comment, 'id' | 'createdAt' | 'replies'
 }
 
 // Add a reply to a comment
-export const addReply = (articleId: string, parentCommentId: string, reply: Omit<Comment, 'id' | 'createdAt' | 'articleId' | 'replies'>): Comment => {
+export const addReply = (articleId: string, parentCommentId: string, reply: Omit<Comment, 'id' | 'createdAt' | 'articleId' | 'replies' | 'avatar'>): Comment => {
   ensureCommentsFile()
   const commentsData = fs.readFileSync(COMMENTS_FILE, 'utf-8')
   const comments: Comment[] = JSON.parse(commentsData)
@@ -90,11 +102,22 @@ export const addReply = (articleId: string, parentCommentId: string, reply: Omit
     throw new Error('Parent comment not found')
   }
 
+  // Available avatar images
+  const avatars = [
+    '/images/avatar.png',
+    '/images/avatar2.png',
+    '/images/avatar-girl.png',
+  ]
+
+  // Assign a random avatar
+  const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)]
+
   const newReply: Comment = {
     ...reply,
     articleId,
     id: Date.now().toString() + '-reply',
     createdAt: new Date().toISOString(),
+    avatar: randomAvatar,
   }
 
   // Add the reply to the parent's replies array

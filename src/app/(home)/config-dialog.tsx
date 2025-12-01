@@ -314,7 +314,7 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 								{avatarItem?.type === 'file' ? (
 									<img src={avatarItem.previewUrl} alt='avatar preview' className='h-full w-full object-cover' />
 								) : (
-									<img src='/images/avatar.png' alt='current avatar' className='h-full w-full object-cover' />
+									<img src='/images/avatar2.png' alt='current avatar' className='h-full w-full object-cover' />
 								)}
 								<div className='pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100'>
 									<span className='text-xs text-white'>{avatarItem ? '更换' : '上传'}</span>

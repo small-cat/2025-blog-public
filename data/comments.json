@@ -11,9 +11,11 @@
         "content": "感谢",
         "articleId": "webpack-react",
         "id": "1764346063451-reply",
-        "createdAt": "2025-11-28T16:07:43.451Z"
+        "createdAt": "2025-11-28T16:07:43.451Z",
+        "avatar": "/images/blogger/2fe46db88bd43683.svg"
       }
-    ]
+    ],
+    "avatar": "/images/blogger/fe25259da8e3609b.png"
   },
   {
     "author": "hehe",
@@ -27,9 +29,11 @@
         "content": "1",
         "articleId": "webpack-react",
         "id": "1764473194862-reply",
-        "createdAt": "2025-11-30T03:26:34.862Z"
+        "createdAt": "2025-11-30T03:26:34.862Z",
+        "avatar": "/images/blogger/fe25259da8e3609b.png"
       }
-    ]
+    ],
+    "avatar": "/images/blogger/fe25259da8e3609b.png"
   },
   {
     "author": "test2",
@@ -43,9 +47,11 @@
         "content": "r2test2...",
         "articleId": "webpack-react",
         "id": "1764474599838-reply",
-        "createdAt": "2025-11-30T03:49:59.838Z"
+        "createdAt": "2025-11-30T03:49:59.838Z",
+        "avatar": "/images/blogger/fe25259da8e3609b.png"
       }
-    ]
+    ],
+    "avatar": "/images/avatar.png"
   },
   {
     "author": "呵呵",
@@ -59,16 +65,19 @@
         "content": "rep...",
         "articleId": "webpack-react",
         "id": "1764474762701-reply",
-        "createdAt": "2025-11-30T03:52:42.701Z"
+        "createdAt": "2025-11-30T03:52:42.701Z",
+        "avatar": "/images/blogger/fe25259da8e3609b.png"
       }
-    ]
+    ],
+    "avatar": "/images/avatar.png"
   },
   {
     "author": "呵呵",
     "content": "sfdsf",
     "articleId": "webpack-react",
     "id": "1764476037172",
-    "createdAt": "2025-11-30T04:13:57.172Z"
+    "createdAt": "2025-11-30T04:13:57.172Z",
+    "avatar": "/images/avatar.png"
   },
   {
     "author": "呵呵",
@@ -82,9 +91,11 @@
         "content": "reply to fdf ,..",
         "articleId": "webpack-react",
         "id": "1764485468505-reply",
-        "createdAt": "2025-11-30T06:51:08.505Z"
+        "createdAt": "2025-11-30T06:51:08.505Z",
+        "avatar": "/images/blogger/2fe46db88bd43683.svg"
       }
-    ]
+    ],
+    "avatar": "/images/avatar.png"
   },
   {
     "author": "呵呵",
@@ -98,14 +109,35 @@
         "content": "reply test1...",
         "articleId": "webpack-react",
         "id": "1764483460968-reply",
-        "createdAt": "2025-11-30T06:17:40.968Z"
+        "createdAt": "2025-11-30T06:17:40.968Z",
+        "avatar": "/images/blogger/2fe46db88bd43683.svg"
       },
       {
         "author": "test2",
         "content": "reply test2 ...",
         "articleId": "webpack-react",
         "id": "1764483489767-reply",
-        "createdAt": "2025-11-30T06:18:09.767Z"
+        "createdAt": "2025-11-30T06:18:09.767Z",
+        "avatar": "/images/blogger/fe25259da8e3609b.png"
+      }
+    ],
+    "avatar": "/images/blogger/2fe46db88bd43683.svg"
+  },
+  {
+    "author": "test@163.com",
+    "content": "it is good.",
+    "articleId": "texture-format",
+    "id": "1764554982456",
+    "createdAt": "2025-12-01T02:09:42.456Z",
+    "avatar": "/images/avatar-girl.png",
+    "replies": [
+      {
+        "author": "test2@gmail.com",
+        "content": "thanks",
+        "articleId": "texture-format",
+        "id": "1764555004297-reply",
+        "createdAt": "2025-12-01T02:10:04.297Z",
+        "avatar": "/images/avatar2.png"
       }
     ]
   }
