@@ -44,7 +44,8 @@ export default function BlogPage() {
 		const query = searchQuery.toLowerCase();
 		return displayItems.filter(item =>
 			item.title?.toLowerCase().includes(query) ||
-			item.summary?.toLowerCase().includes(query)
+			item.summary?.toLowerCase().includes(query) ||
+			item.tags?.toString().toLowerCase().includes(query)
 		);
 	}, [searchQuery, displayItems]);
 
