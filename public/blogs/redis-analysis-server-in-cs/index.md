@@ -24,6 +24,7 @@ redis文件事件处理器分为四个组成部分，套接字、IO多路复用�
 ### IO多路复用程序
 redis中的IO多路复用程序的功能是通过包装 select、epoll、evpoll 和 kqueue 这些IO多路复用库函数来实现的，在源码中对应的文件名为 `ae_select.c`、`ae_epoll.c`、`ae_evpoll.c`、`ae_kqueue.c`。redis在封装这些库函数时，都使用了相同的API，类似于C++的多态实现，这样，IO多路复用程序的底层实现就能够互换。代码如下所示
 
+```c
 	/* Include the best multiplexing layer supported by this system.
 	 * The following should be ordered by performances, descending. */
 	#ifdef HAVE_EVPORT
@@ -39,6 +40,7 @@ redis中的IO多路复用程序的功能是通过包装 select、epoll、evpoll 
 	        #endif
 	    #endif
 	#endif
+```
 	
 通过宏定义规则，在编译时自动选择系统中性能最高的IO多路复用库函数作为redis底层IO多路复用程序的实现，这种方法很巧妙。
 
@@ -48,7 +50,7 @@ redis中的IO多路复用程序的功能是通过包装 select、epoll、evpoll 
 #### 事件的类型
 在redis中，文件事件创建函数为 `aeCreateFileEvent`，其函数如下
 
-{% highlight ruby %}
+```c
 	/* 
 	fd : socket file descriptor
 	mask : type of event, READABLE or WRITABLE
@@ -76,7 +78,7 @@ redis中的IO多路复用程序的功能是通过包装 select、epoll、evpoll 
 	        eventLoop->maxfd = fd;
 	    return AE_OK;
 	}
-{% endhighlight %}
+```
 
 mask 为事件的类型，为 `AE_WRITABLE` 和 `AE_READABLE` 两种，分别为可写和可读两种类型。proc 为文件事件处理函数，fd 为套接字的文件描述符，而 clientData 则是客户端在服务器端的状态信息，这个后面会重点讲述。
 
@@ -89,7 +91,7 @@ mask 为事件的类型，为 `AE_WRITABLE` 和 `AE_READABLE` 两种，分别为
 
 通过查看 `ae_select.c/aeApiPoll` 函数理解服务器是如何监听套接字的文件事件的。
 
-{% highlight ruby %}
+```
 	static int aeApiPoll(aeEventLoop *eventLoop, struct timeval *tvp) {
 	    aeApiState *state = eventLoop->apidata;
 	    int retval, j, numevents = 0;
@@ -118,7 +120,7 @@ mask 为事件的类型，为 `AE_WRITABLE` 和 `AE_READABLE` 两种，分别为
 	    }
 	    return numevents;
 	}
-{% endhighlight %}
+```
 
 返回值 numevents，为产生的文件事件的个数。通过多路复用IO库函数 select，监听多个套接字，当套接字符合上述要求时，会变得可读或者可写，可读的套接字保存在套接字集合 `state->_rfds` 中，可写的保存在 `state->_wfds` 中，异常情况的套接字集合设置为 NULL，这里不关心。然后根据套接字的可读或者可写状态，预设文件事件，将他们的文件描述符fd 和 事件类型 mask 保存在 fired 数组中，这个数组中保存的都是产生事件的套接字，然后通过扫描 fired 数组，对产生的文件事件一个一个的进行处理。
 
@@ -126,7 +128,7 @@ mask 为事件的类型，为 `AE_WRITABLE` 和 `AE_READABLE` 两种，分别为
 
 在 `aeProcessEvents` 函数中，通过调用上述的 `aeApiPoll` 函数，等待和分配文件事件，然后调用对应的事件处理函数进行处理。
 
-{% highlight ruby %}
+```
 	/* Process every pending time event, then every pending file event
 	 * (that may be registered by time event callbacks just processed).
 	 * Without special flags the function sleeps until some file event
@@ -216,7 +218,7 @@ mask 为事件的类型，为 `AE_WRITABLE` 和 `AE_READABLE` 两种，分别为
 	
 	    return processed; /* return the number of processed file/time events */
 	}
-{% endhighlight %}
+```
 
 `aeProcessEvents` 函数，先处理文件事件，如果此时时间事件触发，在处理时间事件。`aeProcessEvents` 就是时间分派器，将产生的文件事件分派给对应的事件处理函数进行处理。
 
@@ -230,6 +232,7 @@ redis 服务器中，事件处理函数，主要由上图中列出的三种，�
 __连接应答处理器 acceptTcpHandler__ <br>
 用于对服务器监听的套接字请求连接的客户端进行应答(即客户端执行connect)，具体实现为 `accept()` 函数的封装。
 
+```c
 	void initServer (void)
 	{
 		...
@@ -244,10 +247,11 @@ __连接应答处理器 acceptTcpHandler__ <br>
     	}
 		...
 	} 
+```
 
 redis 在初始化时，会创建文件事件，将连接应答处理器与服务器监听的套接字的 `AE_READABLE` 类型的事件关联起来(或者说是绑定)，当客户端连接服务器(connect)时，该被服务器监听的套接字会会变成 `AE_READABLE` ，IO多路复用程序将该套接字保存在可读的套接字集合中，引发连接应答处理器执行相应的操作。
 
-{% highlight ruby %}
+```c
 	void acceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
 	    int cport, cfd, max = MAX_ACCEPTS_PER_CALL;
 	    char cip[REDIS_IP_STR_LEN];
@@ -267,14 +271,14 @@ redis 在初始化时，会创建文件事件，将连接应答处理器与服�
 	        acceptCommonHandler(cfd,0);
 	    }
 	}
-{% endhighlight %}
+```
 
 __命令请求处理器 readQueryFromClient__ <br>
 负责读取客户端发送的命令请求内容，底层实现为 `read` 函数的封装。当客户端通过连接应答处理器成功连接服务器之后，服务器会将命令请求处理器与套接字的 `AE_READABLE` 关联起来，当客户端向服务器发送命令请求的时候，套接字就产生了 `AE_READABLE` 类型的文件事件，触发命令请求处理器，由该处理器对套接字执行相应的操作。
 
 在服务器端，会有一个 `redisClient` 结构，用于保存客户端的状态信息。
 
-{% highlight ruby %}
+```c
 	static void acceptCommonHandler(int fd, int flags) {
 	    redisClient *c;
 	    if ((c = createClient(fd)) == NULL) {
@@ -302,11 +306,11 @@ __命令请求处理器 readQueryFromClient__ <br>
 	    server.stat_numconnections++;
 	    c->flags |= flags;
 	}
-{% endhighlight %}
+```
 
 连接应答处理器连接成功时，会处理上述函数，函数的主要功能，是当客户端成功连接服务器时，就创建一个新的客户端类型的对象(redisClient)用于保存客户端的信息，同时，将该客户端加入到服务器的客户端链表中。
 
-{% highlight ruby %}
+```c
 	redisClient *createClient(int fd) {
 	    redisClient *c = zmalloc(sizeof(redisClient));
 	
@@ -330,11 +334,11 @@ __命令请求处理器 readQueryFromClient__ <br>
 		/* 对客户端其他信息的初始化 */
 	    ...
 	}
-{% endhighlight %}
+```
 
 而在创建客户端时，就会创建文件事件，将套接字的 `AE_READABLE` 与命令请求处理器关联。如上述函数所示。
 
-{% highlight ruby %}
+```c
 	void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 	    redisClient *c = (redisClient*) privdata;
 	    int nread, readlen;
@@ -398,7 +402,7 @@ __命令请求处理器 readQueryFromClient__ <br>
 	    processInputBuffer(c);	//解析c->querybuf 中的参数，以redisStringObject的方式放入 c->argv 数组中
 	    server.current_client = NULL;
 	}
-{% endhighlight %}
+```
 
 `readQueryFromClient` 函数，读取客户端发送的命令请求，存放在 `c->querybuf` 中，这是客户端缓冲区，最大限制为 `REDIS_MAX_QUERYBUF_LEN`，这个宏定义为 `redis.h`
 
@@ -408,7 +412,7 @@ __命令请求处理器 readQueryFromClient__ <br>
 __命令回复处理器__ <br>
 负责将服务器执行命令后得到的结果通过套接字返回给客户端。底层实现为 `write` 函数的封装。当服务器执行命令结果需要返回给客户端的时候，服务器就会创建文件事件，将命令回复处理器和套接字的 `AE_WRITABLE` 类型的时间关联起来。当客户端需要接受服务器传回的结果时，就会产生 `AE_WRITABLE` 类型的文件事件，引发命令回复处理器执行，对套接字进行操作。
 
-{% highlight ruby %}
+```c
 	/* This function is called every time we are going to transmit new data
 	 * to the client. The behavior is the following:
 	 *
@@ -461,11 +465,11 @@ __命令回复处理器__ <br>
 	    /* Authorize the caller to queue in the output buffer of this client. */
 	    return REDIS_OK;
 	}
-{% endhighlight %}
+```
 
 `sendReplyToClient` 函数就是将命令结果返回到客户端
 
-{% highlight ruby %}
+```c
 	void sendReplyToClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 	    redisClient *c = privdata;
 	    int nwritten = 0, totwritten = 0, objlen;
@@ -548,9 +552,10 @@ __命令回复处理器__ <br>
 	        if (c->flags & REDIS_CLOSE_AFTER_REPLY) freeClient(c);
 	    }
 	}
-{% endhighlight %}
+```
 
 ## 时间事件
+```c
 	/* Time event structure */
 	typedef struct aeTimeEvent {
 	    long long id; /* time event identifier. , 值是递增的 */
@@ -561,12 +566,14 @@ __命令回复处理器__ <br>
 	    void *clientData;
 	    struct aeTimeEvent *next;	/* 时间事件，以链表的形式连接 */
 	} aeTimeEvent;
+```
 
 时间事件分为两种，一个是定时事件，一个是周期性事件。 <br>
 __定时事件__：让一段程序在指定一段时间之后执行 <br>
 __周期性事件__：让一段程序每隔指定时间执行一次。
 
 ### 创建时间事件
+```c
 	long long aeCreateTimeEvent(aeEventLoop *eventLoop, long long milliseconds,
 	        aeTimeProc *proc, void *clientData,
 	        aeEventFinalizerProc *finalizerProc)
@@ -585,6 +592,7 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 	    eventLoop->timeEventHead = te;
 	    return id;
 	}
+```
 
 `milliseconds`：是多久之后执行时间事件的参数 <br>
 `id`：是时间事件的唯一 id 标识，从 0 开始计数 <br>
@@ -592,6 +600,7 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 `aeAddMillisecondsToNow` 函数用于更新时间事件的 when_sec 和 when_ms 变量，即用当前时间加上 milliseconds 转换的时间，表示 milliseconds 时间之后将会执行该时间事件。
 
 ### 删除时间事件
+```c
 	int aeDeleteTimeEvent(aeEventLoop *eventLoop, long long id)
 	{
 	    aeTimeEvent *te, *prev = NULL;
@@ -613,10 +622,12 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 	    }
 	    return AE_ERR; /* NO event with the specified ID found */
 	}
+```
 
 在 redis 中，多个时间事件是通过单链表连接起来的，链表头结点为 `eventLoop->timeEventHead`，删除时间事件时，先通过 id 找到时间事件，然后在单链表中删除该节点。
 
 ### 查找当前时间最近的时间事件
+```c
 	/* Search the first timer to fire.
 	 * This operation is useful to know how many time the select can be
 	 * put in sleep without to delay any event.
@@ -642,11 +653,13 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 	    }
 	    return nearest;
 	}
+```
 
 当创建一个时间事件时，将该事件加入到时间事件单链表中，查找链表中离当前时间最近的事件，需要扫描整个链表，类似于一次冒泡排序。
 
 ### 时间事件的调度
-{% highlight ruby %}
+
+```c
 	/* Process time events */
 	static int processTimeEvents(aeEventLoop *eventLoop) {
 	    int processed = 0;
@@ -717,10 +730,11 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 	    }
 	    return processed;
 	}
-{% endhighlight %}
+```
 
 如果当前时间 now 小于 `eventloop->lastTime`，那么
 
+```c
 	if (now < eventLoop->lastTime) {
 		te = eventLoop->timeEventHead;
 	    while(te) {
@@ -728,6 +742,7 @@ __周期性事件__：让一段程序每隔指定时间执行一次。
 	        te = te->next;
 	    }
 	}
+```
 
 redis 会处理整个时间链表中的所有时间事件。
 
@@ -741,19 +756,21 @@ redis 会处理整个时间链表中的所有时间事件。
 ### 时间事件的使用 servCron 事件
 在redis 服务器初始化时，会创建时间事件
 
+```c
     /* Create the serverCron() time event, that's our main way to process
      * background operations. */
     if(aeCreateTimeEvent(server.el, 1, serverCron, NULL, NULL) == AE_ERR) {
         redisPanic("Can't create the serverCron time event.");
         exit(1);
     }
+```
 
 该时间事件的处理函数为 `serverCron`。
 # 服务器中的 client 状态
 Redis 服务器负责与多个客户端建立网络连接，处理客户端发送的命令请求，在数据库中保存客户端执行命令所产生的数据，并通过资源管理来维持服务器自身的运转。<br>
 对每个与服务器连接的客户端，服务器都为这些客户端建立了相应的结构，用于保存客户端的状态信息，以及执行相关功能时需要用到的数据结构， `redis.h/redisClient`
 
-{% highlight ruby %}
+```c
 	/* With multiplexing we need to take per-client state.
  	 * Clients are taken in a linked list. */
 	typedef struct redisClient {
@@ -807,7 +824,7 @@ Redis 服务器负责与多个客户端建立网络连接，处理客户端发�
 	    int bufpos;
 	    char buf[REDIS_REPLY_CHUNK_BYTES];	/* 16K output buffer, soft limit */
 	} redisClient;
-{% endhighlight %}
+```
 
 1. `fd` ： 套接字文件描述符 <br>
 2. `name` ： 客户端的名字，是一个 redisObject 对象，redisStringObject 对象 <br>
@@ -824,14 +841,19 @@ Redis 服务器负责与多个客户端建立网络连接，处理客户端发�
 ### 标志 flags
 flags 属性的值可以是单个标志：
 	
+```
 	flags = <flag>
+```
 
 也可以是多个标志的二进制：
 
+```
 	flags = <flag1> | <flag2> | ...
+```
 
 redis 中客户端标志的宏定义如下所示
 
+```c
 	/* Client flags */
 	#define REDIS_SLAVE (1<<0)   /* This client is a slave server */
 	#define REDIS_MASTER (1<<1)  /* This client is a master server */
@@ -853,6 +875,7 @@ redis 中客户端标志的宏定义如下所示
 	#define REDIS_PRE_PSYNC (1<<16)   /* Instance don't understand PSYNC. */
 	#define REDIS_READONLY (1<<17)    /* Cluster client is in read-only state. */
 	#define REDIS_PUBSUB (1<<18)      /* Client is in Pub/Sub mode. */
+```
 
 ### 输入缓冲区 querybuf
 redis 客户端状态信息中的输入缓冲区 querybuf 用于保存客户端发送的命令请求， `readQueryFromClient` 这个函数就是读取客户端发送的命令请求并保存在 querybuf 中，该缓冲区的最大大小为 1GB，当超出这个值时，服务器将关闭这个客户端。
@@ -866,6 +889,7 @@ argc 表示客户端发送的命令参数的个数， argv 是一个 `redisObjec
 	c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
 在 `redis.c/initServerConfig` 中调用 `populateCommandTable` 函数，初始化  `server.commands` 字典，通过命令名称，在字典中查找对应的命令实现函数。
 
+```c
 	struct redisCommand redisCommandTable[] = {
 	    {"get",getCommand,2,"rF",0,NULL,1,1,1,0,0},
 	    {"set",setCommand,-3,"wm",0,NULL,1,1,1,0,0},
@@ -881,14 +905,17 @@ argc 表示客户端发送的命令参数的个数， argv 是一个 `redisObjec
 	    {"setrange",setrangeCommand,4,"wm",0,NULL,1,1,1,0,0},
 	    ...
 	};
+```
 
 ### 输出缓冲区
 
+```c
 	/* Response buffer */
 	    int bufpos;
 	    char buf[REDIS_REPLY_CHUNK_BYTES];	/* 16K output buffer */
 		...
 		list *reply;
+```
 
 服务器执行命令结果会保存在输出缓冲区，每一个客户端都会有两个缓冲区，一个固定大小的缓冲区和一个可变大小的缓冲区。
 
@@ -923,12 +950,15 @@ redis 服务器启动时，需要做很多准备工作
 ## 初始化服务器
 server 是一个全局变量，在 `redis.c` 中定义
 
+```c
 	/* Global vars */
 	struct redisServer server; /* server global state */
+```
 
 ### 初始化服务器状态结构
 在 `redis.c/initServerConfig()` 函数中，对 `server` 变量进行了初始化
 
+```c
 	void initServerConfig(void) {
 	    int j;
 	
@@ -945,13 +975,16 @@ server 是一个全局变量，在 `redis.c` 中定义
 		populateCommandTable();		//创建命令表
 		..
 	}
+```
 
 `getRandomHexChars` 函数是通过 SHA1 算法获取 server 的 runid，摆正 runid 的唯一性，在 redis 注释中也有如下说明
 
+```
 	/* Generate the Redis "Run ID", a SHA1-sized random number that identifies a
 	 * given execution of Redis, so that if you are talking with an instance
 	 * having run_id == A, and you reconnect and it has run_id == B, you can be
 	 * sure that it is either a different instance or it was restarted. */
+```
 
 `initServerConfig` 函数只创建了服务器状态的一些基本属性参数，比如整数、浮点数和字符串属性，但是对数据库、Lua环境、共享对象、慢查询日志这些数据结构的初始化并没有创建，这些将在后面实现。
 
@@ -960,7 +993,7 @@ redis 服务器启动时，一般会指定配置文件，如果没有指定配�
 
 服务器通过 `loadServerConfig` 函数加载配置文件
 
-{% highlight ruby %}
+```c
 	/* Load the server configuration from the specified filename.
 	 * The function appends the additional configuration directives stored
 	 * in the 'options' string to the config file before loading.
@@ -997,10 +1030,11 @@ redis 服务器启动时，一般会指定配置文件，如果没有指定配�
 	    loadServerConfigFromString(config);
 	    sdsfree(config);
 	}
-{% endhighlight %}
+```
+
 `loadServerConfig` 函数将配置文件全部加载到 config 变量中，整个文件的参数都加载到 config 字符串变量中，此时，config 是一个很长很长的字符串变量，然后通过 `loadServerConfigFromSrting` 函数，将 config 进行分割，并对 server 中的相关参数进行赋值。
 
-{% highlight ruby %}
+```c
 	void loadServerConfigFromString(char *config) {
 	    char *err = NULL;
 	    int linenum = 0, totlines, i;
@@ -1046,7 +1080,7 @@ redis 服务器启动时，一般会指定配置文件，如果没有指定配�
 	            }
 			...
 	}
-{% endhighlight %}
+```
 
 服务器在载入用户指定的配置选项，并对 server 状态进行更新之后，服务器就进入初始化第三个阶段 -- 初始化服务器数据结构。
 
@@ -1073,6 +1107,7 @@ redis 服务器启动时，一般会指定配置文件，如果没有指定配�
 
 (5) 关闭不再需要的文件描述符。一般将 STDIN、STDOUT、STDERR都重定向到 `/dev/null` 空洞文件中，然后在关闭 0,1,2 文件描述符。因为守护进程不与终端设备相关联，所以输出无处显示，也无法从交互式用户那里接收输入。
 
+```c
 	struct rlimit rl;
 	getrlimit (RLIMIT_NOFILE, &rl);
 	
@@ -1088,9 +1123,11 @@ redis 服务器启动时，一般会指定配置文件，如果没有指定配�
 		dup2(fd, STDERR_FILENO);
 		if (fd > STDERR_FILENO) close(fd);
 	}
+```
 
 redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进程
 
+```c
 	void daemonize(void) {
 	    int fd;
 	
@@ -1107,6 +1144,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 	        if (fd > STDERR_FILENO) close(fd);
 	    }
 	}
+```
 
 > 参考： <br>
 > 《Unix 高级环境编程（第3版）》，第13章，守护进程。
@@ -1134,7 +1172,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 - 创建时间事件，关联 `serverCron` 函数
 - 如果AOF持久化功能打开，那么打开现有的AOF文件，如果AOF文件不存在，那么创建并打开一个新的AOF文件，为AOF写入做好准备。
 
-{% highlight ruby %}
+```c
     /* Open the AOF file if needed. */
     if (server.aof_state == REDIS_AOF_ON) {
         server.aof_fd = open(server.aof_filename,
@@ -1145,7 +1183,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
             exit(1);
         }
     }
-{% endhighlight %}
+```
 
 - 初始化服务器后台 `I/O` 模块（bio），为 `I/O` 操作做好准备。 `bioInit()`
 
@@ -1153,6 +1191,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 在完成了 server 的一系列初始化之后，服务器需要载入 AOF 文件或者 RDB 文件来还原数据库的状态。但是，在载入这些文件之前，服务器还需要检查一下系统参数是否正常。
 
 #### 检查系统允许的套接字监听队列长度的最大值
+```c
 	/* Check that server.tcp_backlog can be actually enforced in Linux according
 	 * to the value of /proc/sys/net/core/somaxconn, or warn about it. */
 	void checkTcpBacklogSettings(void) {
@@ -1169,6 +1208,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 	    fclose(fp);
 	#endif
 	}
+```
 
 对于一个TCP连接，Server 与 Client 需要通过三次握手来建立网络连接。当三次握手成功后,我们可以看到端口的状态由 LISTEN 转变为 ESTABLISHED。接着这条链路上就可以开始传送数据了。
 
@@ -1178,6 +1218,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 - 使用该端口的程序中 `listen(int sockfd, int backlog)` 函数.
 #### 检查内存状态
 
+```c
 	#ifdef __linux__
 	int linuxOvercommitMemoryValue(void) {
 	    FILE *fp = fopen("/proc/sys/vm/overcommit_memory","r");
@@ -1192,6 +1233,7 @@ redis 的 `daemonize()` 函数的实现如下所示，实现 redis 的守护进�
 	
 	    return atoi(buf);
 	}
+```
 
 `overcommit_memory` 文件指定了内核针对内存分配的策略，其值可以是0、1、2。 
 
@@ -1205,7 +1247,9 @@ __什么是Overcommit和OOM__<br>
 
 __当 redis 中因为 `overcommit_memory` 系统参数出现问题时，会出现如下的日志信息__ <br>
 
+```
 	17 Mar 13:18:02.207 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+```
 
 	__解决办法__ <br>
 在 root 权限下，修改内核参数
@@ -1217,6 +1261,7 @@ __当 redis 中因为 `overcommit_memory` 系统参数出现问题时，会出�
 
 __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge Page`(透明巨页)
 
+```c
 	#ifdef __linux__
 	/* Returns 1 if Transparent Huge Pages support is enabled in the kernel.
 	 * Otherwise (or if we are unable to check) 0 is returned. */
@@ -1234,6 +1279,7 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 	    return (strstr(buf,"[never]") == NULL) ? 1 : 0;
 	}
 	#endif
+```
 
 　　一般而言，内存管理的最小块级单位叫做 page ，一个 page 是 4096 bytes，1M 的内存会有256个 page，1GB的话就会有256,000个 page。CPU 通过内置的内存管理单元维护着 page 表记录。 <br>
 　　现代的硬件内存管理单元最多只支持数百到上千的 page 表记录，并且，对于数百万 page 表记录的维护算法必将与目前的数百条记录的维护算法大不相同才能保证性能，目前的解决办法是，如果一个程序所需内存page数量超过了内存管理单元的处理大小，操作系统会采用软件管理的内存管理单元，但这会使程序运行的速度变慢。 <br>
@@ -1252,6 +1298,7 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 3. 透明大页介绍 [http://www.cnblogs.com/kerrycode/archive/2015/07/23/4670931.html] <br>
 
 #### 加载 AOF 或者 RDB 文件
+```c
 	/* Function called at startup to load RDB or AOF file in memory. */
 	void loadDataFromDisk(void) {
 	    long long start = ustime();	//get current time as seconds
@@ -1268,10 +1315,13 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 	        }
 	    }
 	}
+```
+
 
 如果服务器启用了 AOF 持久化功能，`server.aof_state == REDIS_AOF_ON`，服务器使用 AOF 文件来还原数据库状态；否则，服务器使用 RDB 文件来还原数据库状态。
 
 ## 执行事件循环
+```c
 	void aeMain(aeEventLoop *eventLoop) {
 	    eventLoop->stop = 0;
 	    while (!eventLoop->stop) {
@@ -1280,6 +1330,7 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 	        aeProcessEvents(eventLoop, AE_ALL_EVENTS);
 	    }
 	}
+```
 
 事件循环，处理文件事件和时间事件。
 
@@ -1295,14 +1346,14 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 4) 客户端接收到命令回复OK，打印给用户
 
 #### 发送命令请求
-在前面的章节《redis源码分析 -- cs结构分析之客户端》[http://blog.csdn.net/honglicu123/article/details/53169843]中已经介绍了客户端发送命令到服务器的细节，用户在客户端键入命令，发送到服务器时，是按照 redis 协议格式发送的。
+在前面的章节《redis源码分析 -- cs结构分析之客户端》[`http://blog.csdn.net/honglicu123/article/details/53169843`]中已经介绍了客户端发送命令到服务器的细节，用户在客户端键入命令，发送到服务器时，是按照 redis 协议格式发送的。
 
 #### 读取命令请求
 当服务器初始化成功后，创建文件事件，将套接字与连接请求处理器关联，当客户端与服务器连接之后，就会创建文件事件，将套接字与命令请求处理器连接，客户端向服务器发送命令请求，触发该事件，引发命令请求处理器处理，接收客户端的命令。
 
 1) 读取套接字中协议格式的命令请求，并保存到客户端状态的输入缓冲区中 c->querybuf
 
-{% highlight ruby %}
+```c
 	void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 		...
 		qblen = sdslen(c->querybuf);
@@ -1318,7 +1369,7 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 	    }
 		...
 	}
-{% endhighlight %}
+```
 
 2) 对输入缓冲区中的命令进行解析，将参数和参数个数保存在客户端状态的 argc 和 argv 中，`networking.c/processInlineBuffer` 和 `networking.c/processMultibulkBuffer` 就是完成这个操作。将redis协议格式的命令请求解析之后，每一个命令参数都生成一个 redisStringObject 类型的结构，保存在 argv 数组中。比如 `SET NAME REDIS` ，在客户端状态结构中将如下所示的形式存储
 
@@ -1331,7 +1382,7 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 **一、 查找命令实现函数** <br>
 在服务器初始化 `initServerConfig` 函数中，
 
-{% highlight ruby %}
+```c
 	/* Command table -- we initiialize it here as it is part of the
 	     * initial configuration, since command names may be changed via
 	     * redis.conf using the rename-command directive. */
@@ -1343,16 +1394,19 @@ __在 redis 中，需要查看系统是否支持 THP__，即 `Transparent Huge P
 	    server.lpushCommand = lookupCommandByCString("lpush");
 	    server.lpopCommand = lookupCommandByCString("lpop");
 	    server.rpopCommand = lookupCommandByCString("rpop");
-{% endhighlight %}
+```
 
 对命令表做了初始化，创建了命令表字典，在上面 服务器中的客户端状态 小节中有所描述。
 
 当需要执行命令时，首先根据客户端状态中解析出的命令参数 argv[0] 在命令表字典中查找命令实现函数
 
+```
 	c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
+```
 	
 c->cmd 和 c->lastcmd 是 redisCommand 结构的指针
 
+```c
 	struct redisCommand {
 	    char *name;
 	    redisCommandProc *proc;
@@ -1368,13 +1422,14 @@ c->cmd 和 c->lastcmd 是 redisCommand 结构的指针
 	    int keystep;  /* The step between first and last key */
 	    long long microseconds, calls;
 	};
+```
 
 name ：是命令的名称，比如 “SET” <br>
 proc ：是命令实现函数指针，命令SET的命令实现函数为 `setCommand`。<br>
 arity：命令参数的个数，用于检查命令请求的格式是否正确。如果是负值 -N，表明这个命令的参数个数大于等于N，如果是正数，就表明参数个数为N <br>
 sflags：字符串形式的标识，比如 "wrm"，这个在初始化命令字典表示，有定义
 
-{% highlight ruby %}
+```c
 	/* Populates the Redis Command Table starting from the hard coded list
 	 * we have on top of redis.c file. */
 	void populateCommandTable(void) {
@@ -1413,7 +1468,7 @@ sflags：字符串形式的标识，比如 "wrm"，这个在初始化命令字�
 	        redisAssert(retval1 == DICT_OK && retval2 == DICT_OK);
 	    }
 	}
-{% endhighlight %}
+```
 
 flags：是对 sflags 分析得出的二进制标识 <br>
 calls：记录服务器执行该命令的次数 <br>
@@ -1430,7 +1485,7 @@ milliseconds：记录服务器执行该命令所耗费总时长
 #### 调用命令实现
 前面的操作，服务器已经将命令参数和命令实现函数都保存在了客户端状态结构中，服务器只需要执行相应的语句即可
 
-{% highlight ruby %}
+```c
 	void call(redisClient *c, int flags) {
 		...
 		c->cmd->proc(c);
@@ -1461,7 +1516,7 @@ milliseconds：记录服务器执行该命令所耗费总时长
 	    }
 		...
 	}
-{% endhighlight %}
+```
 
 命令执行完之后，还需要做一些其他操作： <br>
 如果服务器开启了慢查询日志功能，服务器会检查是否需要为刚执行的命令添加一条慢查询日志； <br>

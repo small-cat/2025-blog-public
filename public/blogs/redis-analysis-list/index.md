@@ -1,5 +1,5 @@
 redis 中链表结构如下
-{% highlight ruby %}
+```c
 	typedef struct listNode {
 	    struct listNode *prev;	//指向前驱指针
 	    struct listNode *next;	//指向后继指针
@@ -14,7 +14,7 @@ redis 中链表结构如下
 	    int (*match)(void *ptr, void *key);
 	    unsigned long len;
 	} list;		//链表
-{% endhighlight %}
+```
 
 redis 的链表为双向链表，每一个链表结点同时具有一个指向前驱和指向其后继节点的指针，多个节点就组成了一个双向链表。
 
@@ -25,7 +25,7 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 * match 用于比对节点所保存的值与另一个输入值是否相等
 
 ## 创建链表
-{% highlight ruby %}
+```c
 	/* Create a new list. The created list can be freed with
 	 * AlFreeList(), but private value of every node need to be freed
 	 * by the user before to call AlFreeList().
@@ -44,12 +44,12 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 	    list->match = NULL;
 	    return list;
 	}
-{% endhighlight %}
+```
 
 创建链表，链表没有节点，头尾指针均指向`NULL`
 
 ## 从链表头或者链表尾插入新节点
-{% highlight ruby %}
+```c
 	/* Add a new node to the list, to head, containing the specified 'value'
 	 * pointer as value.
 	 *
@@ -101,9 +101,9 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 	    list->len++;
 	    return list;
 	}
-{% endhighlight %}
+```
 ## 在指定节点处添加新节点
-{% highlight ruby %}
+```c
 	list *listInsertNode(list *list, listNode *old_node, void *value, int after) {
 	    listNode *node;
 	
@@ -132,9 +132,9 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 	    list->len++;
 	    return list;
 	}
-{% endhighlight %}
+```
 ## 旋转链表，将链表尾节点插入到头部
-{% highlight ruby %}
+```c
 	/* Rotate the list removing the tail node and inserting it to the head. */
 	void listRotate(list *list) {
 	    listNode *tail = list->tail;
@@ -152,9 +152,9 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 	    tail->next = list->head;
 	    list->head = tail;
 	}
-{% endhighlight %}
+```
 ## 释放链表
-{% highlight ruby %}
+```c
 	/* Free the whole list.
 	 *
 	 * This function can't fail. */
@@ -173,7 +173,7 @@ list 结构为链表提供了头指针 head 和尾指针 tail，以及链表长�
 	    }
 	    zfree(list);
 	}
-{% endhighlight %}
+```
 	
 redis 双向链表的特性： <br>
 

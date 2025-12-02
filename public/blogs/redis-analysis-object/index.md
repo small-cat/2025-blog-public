@@ -1,6 +1,7 @@
 redis 中使用的主要数据结构有简单动态字符串(sds)、双向链表(linkedlist)、字典(dict)、压缩列表(ziplist)、整数集合(set)等，但是 redis 并没有直接使用这些结构，而是通过这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象，而每种对象都使用了至少一种数据结构。
 
 # 对象结构
+```c
 	/* A redis object, that is a type able to hold a string / list / set */
 	
 	/* The actual Redis Object */
@@ -14,6 +15,7 @@ redis 中使用的主要数据结构有简单动态字符串(sds)、双向链表
 	    int refcount;
 	    void *ptr;
 	} robj;
+```
 	
 redis 使用对象来表示数据库中的键和值，也就是说，每一个键值对，都至少有两个对象，一个对象表示键，一个表示值。这个结构体大小 `sizeof (robj)` 为12，因为前三个元素是位域，共32位，4个字节可以表示。
 
@@ -33,19 +35,21 @@ _`type`_： 表示对象的类型，对应的是 redis 中的 `TYPE` 命令，�
 ![type command](https://github.com/small-cat/small-cat.github.io/raw/master/_pics/redis_analysis/redis_TYPE.png) <br>
 那代码中， `TYPE` 命令有几个值呢
 
+```c
 	/* Object types */
 	#define REDIS_STRING 0		/* 字符串对象，返回 "string" */
 	#define REDIS_LIST 1		/* 列表对象，返回 "list" */
 	#define REDIS_SET 2			/* 集合对象，返回 "set" */
 	#define REDIS_ZSET 3		/* 有序集合对象，返回 "zset" */
 	#define REDIS_HASH 4		/* 哈希对象，返回 "hash" */
+```
 	
 上面列出了对象的所有类型
 
 ## 对象的编码(encoding)
 `encoding` 属性决定了对象的 ptr 指向的底层数据结构的实现，也就是说这个对象使用了什么数据结构作为底层实现。 redis 中的宏常量为
 
-{% highlight ruby %}
+```c
 	/* Objects encoding. Some kind of objects like Strings and Hashes can be
 	 * internally represented in multiple ways. The 'encoding' field of the object
 	 * is set to one of this fields for this object. */
@@ -58,13 +62,13 @@ _`type`_： 表示对象的类型，对应的是 redis 中的 `TYPE` 命令，�
 	#define REDIS_ENCODING_INTSET 6  /* Encoded as intset */
 	#define REDIS_ENCODING_SKIPLIST 7  /* Encoded as skiplist */
 	#define REDIS_ENCODING_EMBSTR 8  /* Embedded sds string encoding */
-{% endhighlight %}
+```
 
 每种类型的对象都至少使用了两种不同的编码。其中，字符串编码有 `REDIS_ENCODING_RAW` 和 `REDIS_ENCODING_EMBSTR` 两种，前者是普通的 sds 字符串对象，但是当字符串长度不超过39时， redis 为了节约内存，使用的是后面的字符串编码方式。
 
 在 redis 中，可以通过使用 `OBJECT ENCODING` 命令来查看键的编码方式
 
-{% highlight ruby %}
+```c
 	/* results of "object encoding" command */
 	char *strEncoding(int encoding) {
 	    switch(encoding) {
@@ -79,7 +83,7 @@ _`type`_： 表示对象的类型，对应的是 redis 中的 `TYPE` 命令，�
 	    default: return "unknown";
 	    }
 	}
-{% endhighlight %}
+```
 
 `strEncoding` 函数返回了 `OBJECT ENCODING` 命令时的结果。
 
@@ -97,7 +101,7 @@ redis 中根据不同数据类型创建不同的对象，设置对象的类型�
 ## 字符串对象
 字符串对象的类型 `TYPE` 为 `REDIS_STRING`，而编码可以为 int (`REDIS_ENCODING_INT`)、 raw (`REDIS_ENCODING_RAW`)和 embstr (`REDIS_ENCODING_EMBSTR`)。
 
-{% highlight ruby %}
+```c
 	robj *createObject(int type, void *ptr) {
 	    robj *o = zmalloc(sizeof(*o));	// sizeof (robj) is 12 bytes
 	    o->type = type;
@@ -109,21 +113,23 @@ redis 中根据不同数据类型创建不同的对象，设置对象的类型�
 	    o->lru = LRU_CLOCK();
 	    return o;
 	}
-{% endhighlight %}
+```
 
 `createObject` 函数就是创建一个字符串对象。如果对象保存的是一个字符串的值，同时这个字符串的长度大于39，那么对象将通过一个简单动态字符串(SDS)来保存这个值，并将编码设置为 raw。
 
+```c
 	/* Create a string object with encoding REDIS_ENCODING_RAW, that is a plain
 	 * string object where o->ptr points to a proper sds string. */
 	robj *createRawStringObject(char *ptr, size_t len) {
 	    return createObject(REDIS_STRING,sdsnewlen(ptr,len));
 	}
+```
 
 其结构如下所示: <br>
 ![sds object](https://github.com/small-cat/small-cat.github.io/raw/master/_pics/redis_analysis/sds-object.png)
 当对象保存的值是整数时，将字符串的编码设置为`REDIS_ENCODING_INT`，同时将整数值保存在字符串对象结构的 ptr 里面
 
-{% highlight ruby %}
+```c
 	robj *createStringObjectFromLongLong(long long value) {
 	    robj *o;
 	    if (value >= 0 && value < REDIS_SHARED_INTEGERS) {
@@ -140,13 +146,13 @@ redis 中根据不同数据类型创建不同的对象，设置对象的类型�
 	    }
 	    return o;
 	}
-{% endhighlight %}
+```
 
 如果对象保存的是字符串，且字符串的长度小于39时， redis 为了节约内存，使用另一种字符串的存储方式 embstr，创建字符串对象。
 
 embstr 编码是专门用于保存短字符串的一种优化编码结构，这种编码与 raw 一样，都是用 redisObject 结构和 sdshdr 结构来表示字符串对象，但是 raw 编码在通过调用 `createRawStringObject` 函数时，需要调用两次内存分配，先通过 sdsnew 创建 sds ，然后在通过 `createObject` 创建字符串对象 redisObject，而 embstr 编码只需要一次内存分配。
 
-{% highlight ruby %}
+```c
 	/* Create a string object with encoding REDIS_ENCODING_EMBSTR, that is
 	 * an object where the sds string is actually an unmodifiable string
 	 * allocated in the same chunk as the object itself. */
@@ -170,19 +176,25 @@ embstr 编码是专门用于保存短字符串的一种优化编码结构，这�
 	    }
 	    return o;
 	}
-{% endhighlight %}
+```
 
 embstr 编码通过一次内存分配申请一块连续的内存空间，包括 redisObject 和 sdshdr
 
+```
 	robj *o = zmalloc(sizeof(robj)+sizeof(struct sdshdr)+len+1);
+```
 	
 然后获取 sdshdr 在这个连续空间出的位置
 
+```
 	struct sdshdr *sh = (void*)(o+1);
+```
 	
 将 `TYPE` 设置为 `REDIS_STRING`，`encoding` 设置为 `REDIS_ENCODING_EMBSTR`，因为是连续的内存块，通过 sdshdr 结构体的说明可知， `sizeof (sdshdr)` 的大小为8，成员 buf 是可变长数组，是不能通过`sizeof` 计算长度的，所以获取 sdshdr 的地址 sh 后，往后便宜 `sizeof (sdshdr)` 的大小就是 buf 字符串的值。
 
+```
 	o->ptr = sh+1;
+```
 	
 其结构如下所示 <br>
 ![embstr object](https://github.com/small-cat/small-cat.github.io/raw/master/_pics/redis_analysis/embstr-object.png)
@@ -195,7 +207,7 @@ embstr 编码通过一次内存分配申请一块连续的内存空间，包括 
 
 long double 类型的浮点数，在 redis 中也是作为字符串的值来保存的。
 
-{% highlight ruby %}
+```c
 	/* Create a string object from a long double. If humanfriendly is non-zero
 	 * it does not use exponential format and trims trailing zeroes at the end,
 	 * however this results in loss of precision. Otherwise exp format is used
@@ -237,13 +249,13 @@ long double 类型的浮点数，在 redis 中也是作为字符串的值来保�
 	    }
 	    return createStringObject(buf,len);
 	}
-{% endhighlight %}
+```
 
 将浮点数通过 `snprintf` 的方法转成字符串，保留17为小数，如果需要可读性好，将小数点后的最后一个非0数字后的0全部去掉，但是这样会降低精度。
 
 如果需要对保存到 redis 中的浮点数进行操作，比如加上或者减去某个值， redis 会先将字符串转成浮点数，计算后在转成字符串保存在 redis 中
 
-{% highlight ruby %}
+```c
 	int getLongDoubleFromObject(robj *o, long double *target) {
 	    long double value;
 	    char *eptr;
@@ -267,7 +279,7 @@ long double 类型的浮点数，在 redis 中也是作为字符串的值来保�
 	    *target = value;
 	    return REDIS_OK;
 	}
-{% endhighlight %}
+```
 
 ### 编码的转换
 字符串对象中，int 编码和 embstr 编码在一定条件下可以转换成 raw 编码。
@@ -279,7 +291,7 @@ long double 类型的浮点数，在 redis 中也是作为字符串的值来保�
 ## 其他对象
 下面分别是创建双向链表对象、压缩列表对象、集合对象、整数集合对象、有序集合对象、哈希对象和有序集合压缩列表对象。后续在深入分析这些代码时，在分别对这些对象的结构、编码转换等做详细的分析。
 
-{% highlight ruby %}
+```c
 	robj *createListObject(void) {
 	    list *l = listCreate();
 	    robj *o = createObject(REDIS_LIST,l);
@@ -333,13 +345,13 @@ long double 类型的浮点数，在 redis 中也是作为字符串的值来保�
 	    o->encoding = REDIS_ENCODING_ZIPLIST;
 	    return o;
 	}
-{% endhighlight %}
+```
 ## 类型检查
 redis 中用于操作键的命令可分为两种，一种可以对任何类型的键进行操作，比如  DEL、EXPIRE、RENAME、TYPE、OBJECT 等，另一种只能对特定类型的键执行，比如 SET、GET、APPEND、STRLEN 只能对字符串键执行，而 RPUSH、HSET、HGET、HLEN 只能对列表键执行，如果用 SET 对列表键执行，redis 将返回一个错误。
 
 为了确保指定的键能够执行某些特定的命令，redis 在执行命令前会先检查输入键的类型是否正确，然后再决定是否执行给定的命令。
 
-{% highlight ruby %}
+```c
 	int checkType(redisClient *c, robj *o, int type) {
 	    if (o->type != type) {
 	        addReply(c,shared.wrongtypeerr);	//wrong_type_err
@@ -347,7 +359,7 @@ redis 中用于操作键的命令可分为两种，一种可以对任何类型�
 	    }
 	    return 0;
 	}
-{% endhighlight %}
+```
 
 通过 redisObject 的 `TYPE` 属性来判断类型是否正确： <br>
 
@@ -359,7 +371,7 @@ redis 除了根据对象的 `TYPE` 属性判断键能否执行指定的命令之
 
 比如列表对象，可以有 linkedlist(`REDIS_ENCODING_LINEDLIST`) 和 ziplist(`REDIS_ENCODING_ZIPLIST`) 两个编码方式，但是，在执行 LLEN 命令时，redis 出了需要判断 `TYPE` 是否是 `REDIS_LIST` 外，还需要根据编码判断是 `linkedlist` 还是 `ziplist`，然后才能使用双向链表的 API 还是 ziplist 的 API 执行相应的函数获取长度。
 
-{% highlight ruby %}
+```c
 	void llenCommand(redisClient *c) {
 	    robj *o = lookupKeyReadOrReply(c,c->argv[1],shared.czero);
 	    if (o == NULL || checkType(c,o,REDIS_LIST)) return;
@@ -375,7 +387,7 @@ redis 除了根据对象的 `TYPE` 属性判断键能否执行指定的命令之
 	        redisPanic("Unknown list encoding");
 	    }
 	}
-{% endhighlight %}
+```
 
 上面两个函数展示了 LLEN 的求取过程。
 
@@ -394,7 +406,7 @@ C语言没有内存回收功能，所以 redis 在自己的对象系统中，构
 * 当对象不再被新程序使用时，引用计数减1 (`decrRefCount`)
 * 当对象的引用计数为0时，释放对象
 
----
+```c
 	void decrRefCount(robj *o) {
 	    if (o->refcount <= 0) redisPanic("decrRefCount against refcount <= 0");
 	    if (o->refcount == 1) {
@@ -411,22 +423,27 @@ C语言没有内存回收功能，所以 redis 在自己的对象系统中，构
 	        o->refcount--;
 	    }
 	}
+```
 
 ## 对象共享
 不知道大家还记不记得，上面的字符串对象中，当编码方式为int (`REDIS_ENCODING_INT`)时，对象的创建函数 `createStringObjectFromLongLong`，当整数值在 0 - 10000的范围内时，不会新创建一个字符串对象，而是将 shared 这个共享对象中的 intergers 这个 redisObject 对象数组中对应的元素添加一个指向该元素的引用，同时将该元素是引用计数加1。
 
 shared 是一个全局变量，用于共享
 	
+```c
 	* Our shared "common" objects */
 	
 	struct sharedObjectsStruct shared;
+```
 	
 在 `createSharedObject` 函数中创建和初始化，其中，对 intergers 数组初始化如下
 
+```c
 	for (j = 0; j < REDIS_SHARED_INTEGERS; j++) {
 	        shared.integers[j] = createObject(REDIS_STRING,(void*)(long)j);
 	        shared.integers[j]->encoding = REDIS_ENCODING_INT;
 	}
+```
 	
 其中，`REDIS_SHARED_INTEGERS` 这个常量为 10000，**可以通过修改这个值，来改变共享整数对象的范围。**
 
@@ -441,6 +458,7 @@ redisObject 中 `lru` 属性，记录的就是对象的访问时间信息，根�
 
 `OBJECT IDLETIME` 命令可以打印兑现的空转时长，这是通过将当前时间减去键的值对象的 lru 的时间计算得出的。
 
+```c
 	/* Given an object returns the min number of milliseconds the object was never
 	 * requested, using an approximated LRU algorithm. */
 	unsigned long long estimateObjectIdleTime(robj *o) {
@@ -452,17 +470,17 @@ redisObject 中 `lru` 属性，记录的就是对象的访问时间信息，根�
 	                    REDIS_LRU_CLOCK_RESOLUTION;
 	    }
 	}
+```
 
 `OBJECT IDLTTIME` 这个命令不会改变对象的 lru 属性，像 GET、SET等命令都会改变对象的 lru 属性
 
 键的空转时长还有另外一个作用，就是如果服务器打开了 `maxmemory` 选项，并且服务器的回收内存算法为 `volatile-lru` 或者 `allkeys-lru`，那么当服务器的内存数超过 `maxmemory` 时，空转时长较高的那部分键会被服务器优先释放，回收内存。
 
----
 ## 其他
 ### OBJECT的命令实现
 `OBJECT` 的三种命令
 
-{% highlight ruby %}
+```c
 	/* Object command allows to inspect the internals of an Redis Object.
 	 * Usage: OBJECT <refcount|encoding|idletime> <key> */
 	void objectCommand(redisClient *c) {
@@ -484,10 +502,10 @@ redisObject 中 `lru` 属性，记录的就是对象的访问时间信息，根�
 	        addReplyError(c,"Syntax error. Try OBJECT (refcount|encoding|idletime)");
 	    }
 	}
-{% endhighlight %}
+```
 
 ### redis中将字符串转与long long的巧妙转换
-{% highlight ruby %}
+```c
 	/* Convert a long long into a string. Returns the number of
 	 * characters needed to represent the number.
 	 * If the buffer is not big enough to store the string, 0 is returned.
@@ -619,4 +637,4 @@ redisObject 中 `lru` 属性，记录的就是对象的访问时间信息，根�
 	    }
 	    return 1;
 	}
-{% endhighlight %}
+```

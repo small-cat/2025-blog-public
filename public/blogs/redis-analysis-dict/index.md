@@ -3,7 +3,7 @@
 # 结构体
 redis 中字典的结构如下： 
 
-{% highlight ruby %}
+```c
 	typedef struct dictEntry {
 	    void *key;	//键
 	    union {
@@ -14,16 +14,18 @@ redis 中字典的结构如下：
 	    } v;	//值，使用联合体，可以是指针，也可以是其他类型的值
 	    struct dictEntry *next;	//使用拉链法解决哈希冲突问题
 	} dictEntry;
-{% endhighlight %}
+```
 
 对两个64位类型解释如下
 
+```
 	typedef unsigned __int64 uint64_t;
 	typedef signed __int64 int64_t;
+```
 	
 可以将 `__int64`理解成 `long long`
 
-{% highlight ruby %}
+```c
 	typedef struct dictType {
 	    unsigned int (*hashFunction)(const void *key);
 	    void *(*keyDup)(void *privdata, const void *key);
@@ -32,11 +34,11 @@ redis 中字典的结构如下：
 	    void (*keyDestructor)(void *privdata, void *key);
 	    void (*valDestructor)(void *privdata, void *obj);
 	} dictType;
-{% endhighlight %}
+```
 
 `dictType`结构体为一簇操作特定类型键值对的函数，`privdata`为传给这些函数的可选参数
 
-{% highlight ruby %}
+```c
 	/* This is our hash table structure. Every dictionary has two of this as we
 	 * implement incremental rehashing, for the old to the new table. */
 	typedef struct dictht {
@@ -45,11 +47,11 @@ redis 中字典的结构如下：
 	    unsigned long sizemask;
 	    unsigned long used;
 	} dictht;
-{% endhighlight %}
+```
 
 dictht 为哈希表结构，哈希表结构有一个 dictEntry 的双重指针（可理解成 dictEntry 指针数组），size 为哈希表大小，sizemask 为哈希表大小掩码，用于计算哈希索引值，总是等于 `size-1`，used 为哈希表元素个数，即已有的节点的数量。
 
-{% highlight ruby %}	
+```c
 	typedef struct dict {
 	    dictType *type;
 	    void *privdata;
@@ -57,7 +59,7 @@ dictht 为哈希表结构，哈希表结构有一个 dictEntry 的双重指针�
 	    long rehashidx; /* rehashing not in progress if rehashidx == -1 */
 	    int iterators; /* number of iterators currently running */
 	} dict;
-{% endhighlight %}
+```
 
 dict 为字典结构，包括两个哈希表ht[2], 一个用于正常使用，另一个，当需要扩大哈希表时，将ht[0]中的节点rehashed 到 ht[1] 上，然后再将 ht[1] 设置为ht[0], ht[1]置空，准备下一次 rehashed。 rehashidx 记录了 rehash 的进度，当没有做 rehash 时，它的值为 -1， 当在做 rehash 的值时，它的值表示的是当前 rehash 到了 ht[0] 中的哪一个位置了(可以理解成 ht[0].table[rehashidx])。 redis 的 rehash 是渐进式的，即通过 rehashidx 一个一个递增的形式 rehash 的。
 
@@ -65,7 +67,7 @@ dict 为字典结构，包括两个哈希表ht[2], 一个用于正常使用，�
 ## 计算哈希值和索引值
 redis计算哈希值和索引值，是根据键值来计算的，先计算出哈希值，然后根据哈希值和 sizemask 计算索引值。
 
-{% highlight ruby %}
+```c
 	/* Returns the index of a free slot that can be populated with
 	 * a hash entry for the given 'key'.
 	 * If the key already exists, -1 is returned.
@@ -96,11 +98,13 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 	    }
 	    return idx;
 	}
-{% endhighlight %}
+```
 
 上面这个函数，为获取哈希值和索引值的过程， 首先通过 `dictHashKey(d, key)` 获取哈希值，这是一个宏函数
 
+```
 	#define dictHashKey(d, key) (d)->type->hashFunction(key)
+```
 	
 然后根据哈希值求索引值，`idx = h & d->ht[table].sizemask`，如果此元素在哈希表中已存在，返回-1，不需要再次插入，否则返回一个可以用的位置。搜索哈希表时，需要在两个哈希表中都要搜索。
 
@@ -110,7 +114,7 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 
 扩大哈希表的函数如下
 
-{% highlight ruby %}
+```c
 	/* Expand or create the hash table */
 	int dictExpand(dict *d, unsigned long size)
 	{
@@ -143,19 +147,21 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 	    d->rehashidx = 0;
 	    return DICT_OK;
 	}
-{% endhighlight %}
+```
 
 此函数需要注意最后一段代码
 
+```
 	    d->ht[1] = n;	
 	    d->rehashidx = 0;
+```
 		
 将扩大后的哈希设置为 ht[1]，然后设置 rehashidx 为0，启动 rehash，将 ht[0] 都 从 ht[0].table[0] 开始全部 rehash 到 ht[1].table 中，后面将详细介绍 redis 的 rehash 的过程。
 
 ### 计算哈希值
 字典在计算哈希值时，是通过调用宏函数 `(d)->type->hashFunction (key)`得到的，这只是一个函数指针，在 redis 中，有两个方法计算哈希值。
 
-{% highlight ruby %}
+```c
 	/* MurmurHash2, by Austin Appleby
 	 * Note - This code makes a few assumptions about how your machine behaves -
 	 * 1. We can read a 4-byte value from any address without crashing
@@ -209,10 +215,11 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 	
 	    return (unsigned int)h;
 	}
-{% endhighlight %}
+```
 
 当字典被用作数据库的底层实现或者哈希键的底层实现时， `redis` 使用 `Murmurhash2` 算法来计算哈希的值。 `Murmurhash` 哈希算法是有 `Austin Appleby` 与 2008 年发明的，这种算法的优点在于，即使输入的键是有规律的，算法仍能给出一个很好的随机分布性，并且算法的计算速度也非常快。
 
+```c
 	/* And a case insensitive hash function (based on djb hash) */
 	// 这是一个比较简单的计算哈希值的方法，字符串哈希，就是不断乘以33
 	unsigned int dictGenCaseHashFunction(const unsigned char *buf, int len) {
@@ -223,6 +230,7 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 		//hash << 5 + hash = hash * 2^5 + hash = hash * 32 + hash = hash * 33
 	    return hash;
 	}
+```
 
 ## 解决键冲突
 当不同的 key 利用哈希算法得到相同的 hash 值时，哈希表时如何解决冲突问题的呢？通过前面的哈希节点的结构可以看到`dictEntry`结构是一个链表的节点，有一个指向 `dictEntry`节点的指针成员，确实，哈希表就是通过拉链法（或者链地址法）来解决冲突问题的，每一个哈希节点都有一个next指针，相同哈希索引的多个节点可以通过next指针相连构成一个单链表，这就解决了冲突问题。<br>
@@ -230,7 +238,7 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 
 因为dictEntry 组成的单链表是没有尾节点的，每次插入一个节点都是从头部插入。
 
-{% highlight ruby %}
+```c
 	/* Low level add. This function adds the entry but instead of setting
 	 * a value returns the dictEntry structure to the user, that will make
 	 * sure to fill the value field as he wishes.
@@ -275,13 +283,15 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 	    dictSetKey(d, entry, key);
 	    return entry;
 	}
-{% endhighlight %}
+```
 
 从链表头插入，不需要单向遍历到链表尾部在插入节点，降低了插入节点时的时间复杂度 O(1)
 ## rehash
 哈希表的一个重要的比例参数为_负载因子_(load factor)，它的计算公式为
 
+```
 	load_factor = used / size; //代码中的注释为 USED/BUCKETS ratio
+```
 	
 随着操作的不断进行，哈希表中的节点会逐渐的增加或者减少，为了维持 load factor 在合适的范围之内，程序需要对哈希表进行扩展 (expand) 或者收缩，而这，是通过 rehash 来完成的。
 
@@ -295,6 +305,7 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 **引用中的内容摘自 黄健宏的《Redis设计与实现》4.4节 rehash**
 
 ### 扩展
+```
 	/* Using dictEnableResize() / dictDisableResize() we make possible to
 	 * enable/disable resizing of the hash table as needed. This is very important
 	 * for Redis, as we use copy-on-write and don't want to move too much memory
@@ -305,6 +316,7 @@ redis计算哈希值和索引值，是根据键值来计算的，先计算出哈
 	 * the number of elements and the buckets > dict_force_resize_ratio. */
 	static int dict_can_resize = 1;
 	static unsigned int dict_force_resize_ratio = 5;
+```
 	
 以上两个 static 变量说明的是允许哈希表进行扩展或者收缩的前提条件。
 
@@ -312,7 +324,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 
 `dict_can_resize`设置为1时，表示哈希表可以扩展或者收缩，设置为0时，表示不能操作，但是，当负载因子超过阈值 `dict_forece_resize_ratio`时，会强制进行扩展操作。上文也介绍了 `_dictExpandIfNeeded`这个函数
 
-{% highlight ruby %}
+```c
 	/* Expand the hash table if needed */
 	static int _dictExpandIfNeeded(dict *d)
 	{
@@ -334,7 +346,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	    }
 	    return DICT_OK;
 	}
-{% endhighlight %}
+```
 
 从代码中可以看出：
 
@@ -344,6 +356,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 ### 收缩
 当哈希表节点数减少时，为了保证 load factor 在一个合理范围内，需要对哈希表进行收缩，当负载因子小于等于 1 时，就需要做这种操作。
 
+```c
 	/* Resize the table to the minimal size that contains all the elements,
 	 * but with the invariant of a USED/BUCKETS ratio near to <= 1 */
 	int dictResize(dict *d)
@@ -356,10 +369,12 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	        minimal = DICT_HT_INITIAL_SIZE;
 	    return dictExpand(d, minimal);
 	}
+```
 
 ### 哈希表调整大小的计算
 哈希表进行扩展或者收缩，新的哈希大小是如何计算的呢
 
+```c
 	/* Our hash table capability is a power of two */
 	static unsigned long _dictNextPower(unsigned long size)
 	{
@@ -372,6 +387,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	        i *= 2;
 	    }
 	}
+```
 `DICT_HT_INITAL_SIZE`的值为4，即 2^2，所以每次设置的新哈希表的大小均为 2 的 n 次幂。
 
 ### 渐进式 rehash
@@ -382,7 +398,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 3) 在 rehash 期间，通过判断 rehashidx 是否等于 -1，每次对字典进程添加、删除、查找和更新操作时，出了执行指定操作之外，还会将 `ht[0].table[rehashidx]` 这个单链表上的所有键值对 rehash 到 ht[1] 中，操作完成后，将 rehashidx 加 1 <br>
 4) 当 rehash 操作完成后，rehashidx 的值被设置为 -1
 
-{% highlight ruby %}
+```c
 	/* Performs N steps of incremental rehashing. Returns 1 if there are still
 	 * keys to move from the old to the new hash table, otherwise 0 is returned.
 	 *
@@ -437,13 +453,14 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	    /* More to rehash... */
 	    return 1;
 	}
-{% endhighlight %}
+```
 ## 哈希操作
 ### 查找操作
 查找操作，当 rehashidx 的值不等于 -1 时，说明正在 rehash，那么进行一次rehash操作，在 `_dictRehashStep(d)`中调用 `dictRehash(d, 1)`执行一次。
 
 查找时，在 ht[0] 和 ht[1] 中都需要查找
 
+```c
 	dictEntry *dictFind(dict *d, const void *key)
 	{
 	    dictEntry *he;
@@ -464,13 +481,14 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	    }
 	    return NULL;
 	}
+```
 
 ### 添加
 添加操作在上文中**解决键冲突**一节已经介绍了。
 ### 删除
 删除操作，先在哈希表中查找指定 value 的键值对，然后删除。
 
-{% highlight ruby %}
+```c
 	int dictDelete(dict *ht, const void *key) {
 	    return dictGenericDelete(ht,key,0);
 	}
@@ -512,9 +530,9 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	    }
 	    return DICT_ERR; /* not found */
 	}
-{% endhighlight %}
+```
 ### 更新
-{% highlight ruby %}
+```c
 	/* Add an element, discarding the old if the key already exists.
 	 * Return 1 if the key was added from scratch, 0 if there was already an
 	 * element with such key and dictReplace() just performed a value update
@@ -539,7 +557,7 @@ redis 使用了写时复制的原则（COW），打个比方，当父进程创�
 	    dictFreeVal(d, &auxentry);
 	    return 0;
 	}
-{% endhighlight %}
+```
 
 **参考文献：** <br>
 1. Redis设计与实现，黄健宏 <br>

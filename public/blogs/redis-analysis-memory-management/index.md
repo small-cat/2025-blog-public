@@ -1,11 +1,14 @@
 在 `zmalloc.h` 这个头文件中，有 `USE_TCMALLOC` 和 `USE_JEMALLOC` 这两个宏，分别控制 redis 使用的是 tcmalloc 还是 jemalloc 这两个内存管理器。 tcmalloc 是`Google gperftools`里的组件之一。全名是 `thread cache malloc`（线程缓存分配器），其内存管理分为**线程内存**和**中央堆**两部分。而 jemalloc 是由 `FreeBSD` 的开发人员 `Jason Evans` 开发的，在 FreeBSD、NetBSD和 FireFox 中是默认的 malloc，目前是 Maridab 、Tengine、Redis 中默认推荐的内存优化工具。在没有这两个内存管理器的情况下，redis 使用的是 glibc 的 malloc。下面讲解的都是使用 libc 库的源码分析。
 
+```c
 	#ifndef ZMALLOC_LIB
 	#define ZMALLOC_LIB "libc"
 	#endif
+```
 
 redis 对 tcmalloc 和 jemalloc 的函数都进行了封装
 
+```c
 	#if defined(USE_TCMALLOC)
 	#define malloc(size) tc_malloc(size)
 	#define calloc(count,size) tc_calloc(count,size)
@@ -17,23 +20,28 @@ redis 对 tcmalloc 和 jemalloc 的函数都进行了封装
 	#define realloc(ptr,size) je_realloc(ptr,size)
 	#define free(ptr) je_free(ptr)
 	#endif
+```
 	
 在 redis 中定义了下面这三个变量
 
+```c
 	static size_t used_memory = 0;
 	static int zmalloc_thread_safe = 0;
 	pthread_mutex_t used_memory_mutex = PTHREAD_MUTEX_INITIALIZER;
+```
 	
 `used_memory` 表示系统使用的内存大小，全局维护这么一个变量，说明作者希望通过这个变量来反映内存的使用情况。`zmalloc_thread_safe`通过变量名也能看出，这个是控制线程安全模式的变量，后面的 mutex 变量  `used_memory_mutex` 就是用在线程安全条件下的互斥信号量。 <br>
 
 `HAVE_ATOMIC`定义了原子操作
 
+```c
 	#define update_zmalloc_stat_add(__n) __sync_add_and_fetch(&used_memory, (__n))
 	#define update_zmalloc_stat_sub(__n) __sync_sub_and_fetch(&used_memory, (__n))
+```
 	
 gcc 从 `4.1.2` 提供了 `__sync_*` 系列的 `built-in` 函数，用于提供加减和逻辑运算的原子操作。
 
-{% highlight ruby %}
+```c
 	// 返回更新前的值
 	type __sync_fetch_and_add (type *ptr, type value, ...)
 	type __sync_fetch_and_sub (type *ptr, type value, ...)
@@ -49,10 +57,11 @@ gcc 从 `4.1.2` 提供了 `__sync_*` 系列的 `built-in` 函数，用于提供�
 	type __sync_and_and_fetch (type *ptr, type value, ...)
 	type __sync_xor_and_fetch (type *ptr, type value, ...)
 	type __sync_nand_and_fetch (type *ptr, type value, ...)
-{% endhighlight %}
+```
 
 如果没有定义 `HAVE_ATOMIC`这个宏，使用 mutex 实现对 `used_memory` 的安全操作
 
+```c
 	#define update_zmalloc_stat_add(__n) do { \
 	    pthread_mutex_lock(&used_memory_mutex); \
 	    used_memory += (__n); \
@@ -64,10 +73,12 @@ gcc 从 `4.1.2` 提供了 `__sync_*` 系列的 `built-in` 函数，用于提供�
 	    used_memory -= (__n); \
 	    pthread_mutex_unlock(&used_memory_mutex); \
 	} while(0)
+```
 
 ## 申请
 内存申请 zmalloc 函数，调用的仍然是 glibc 的 malloc 函数。
 
+```c
 	void *zmalloc(size_t size) {
 	    void *ptr = malloc(size+PREFIX_SIZE);
 		
@@ -82,21 +93,27 @@ gcc 从 `4.1.2` 提供了 `__sync_*` 系列的 `built-in` 函数，用于提供�
 	    return (char*)ptr+PREFIX_SIZE;
 	#endif
 	}
+```
 	
 当发生 oom(out of memory) 时，调用 `zmalloc_oom_handler(size)` 异常处理方法。宏 `HAVE_MALLOC_SIZE`只有在定义 `USE_TCMALLOC` 或者 `USE_JEMALLOC` 或者 `__APPLE__`中时才会被定义，在 `ZMALLOC_LIB` 即 libc 中没有被定义，所以此处会跳过这里，执行下面那段。
 
 每次申请内存，申请的大小都是 `size+PREFIX_SIZE`， `PREFIX_SIZE` 的定义为
 
+```
 	#define PREFIX_SIZE (sizeof(size_t))
+```
 	
 zmalloc函数最后
 
+```
 	    *((size_t*)ptr) = size;	
+```
 		
 将 size 大小保存在 ptr 中，相当于将申请的长度 size 保存在了 ptr 的头部，然后返回 `ptr + PREFIX_SIZE` 后面的可用部分 `realptr`。
 
 `update_zmalloc_stat_alloc(size + PREFIX_SIZE)` 是先将自己内存对齐，如果long是4位就对齐到4的整数倍。然后将内存的大小记录下来保存到全局变量 `used_memory` 中
 
+```c
 	#define update_zmalloc_stat_alloc(__n) do { \
 	    size_t _n = (__n); \
 	    if (_n&(sizeof(long)-1)) _n += sizeof(long)-(_n&(sizeof(long)-1)); \
@@ -116,6 +133,7 @@ zmalloc函数最后
 	        used_memory -= _n; \
 	    } \
 	} while(0)
+```
 	
 对上面这个宏函数的解释： <br>
 
@@ -124,6 +142,7 @@ zmalloc函数最后
 
 下面介绍另外几个函数
 
+```c
 	void *zcalloc(size_t size) {
 	    void *ptr = calloc(1, size+PREFIX_SIZE);
 	
@@ -137,9 +156,11 @@ zmalloc函数最后
 	    return (char*)ptr+PREFIX_SIZE;
 	#endif
 	}
+```
 	
 `zcalloc` 调用 `calloc`
 
+```c
 	void *zrealloc(void *ptr, size_t size) {
 	#ifndef HAVE_MALLOC_SIZE
 	    void *realptr;
@@ -168,11 +189,13 @@ zmalloc函数最后
 	    return (char*)newptr+PREFIX_SIZE;
 	#endif
 	}
+```
 	
 `zrealloc` 调用 `realloc`
 ## 释放
 封装 `free` 函数
 
+```c
 	void zfree(void *ptr) {
 	#ifndef HAVE_MALLOC_SIZE
 	    void *realptr;
@@ -190,10 +213,12 @@ zmalloc函数最后
 	    free(realptr);
 	#endif
 	}
+```
 
 ## 获取内存使用大小
 获取 `used_memory` 这个全局变量的值，需要考虑到是否是线程安全模式下，如果是线程安全，需要通过互斥量 mutex 来访问。
 
+```c
 	size_t zmalloc_used_memory(void) {
 	    size_t um;
 	
@@ -212,10 +237,11 @@ zmalloc函数最后
 	
 	    return um;
 	}
+```
 
 ## Redis中的内存分配大小和碎片大小
 ### RSS (resident set size)
-{% highlight ruby %}
+```c
 	/* Get the RSS information in an OS-specific way.
 	 *
 	 * WARNING: the function zmalloc_get_rss() is not designed to be fast
@@ -293,7 +319,7 @@ zmalloc函数最后
 	     * of course... */
 	    return zmalloc_used_memory();
 	}
-{% endhighlight %}
+```
 
 在 linux 系统中，RSS (resident set size) 为常驻内存，在 `Wikipedia`中的解释如下
 
@@ -325,10 +351,12 @@ redis中给出了三种方法获取程序的常驻内存RSS，当定义宏 `HAVE
 最后一种方法就是将 `used_memory` 近似的作为RSS。
 
 ### 计算内存使用率 (fragmentation ratio)
+```c
 	/* Fragmentation = RSS / allocated-bytes */
 	float zmalloc_get_fragmentation_ratio(size_t rss) {
 	    return (float)rss/zmalloc_used_memory();
 	}
+```
 	
 redis 通过公式 `RSS / allocated-bytes` 来计算内存使用率，通过上面介绍的 RSS 的求值方法可知， `RSS` 是大于等于 `allocated-bytes` (也就是全局变量 `used_memory`)的。所以，`ratio`是大于等于1的。
 
@@ -337,7 +365,7 @@ redis 通过公式 `RSS / allocated-bytes` 来计算内存使用率，通过上�
 ### 获取 Private_Dirty 的值
 下面这个函数是从 `/proc/self/smaps` 这个文件中读取 `Private_Dirty` 这个字段的值。
 
-{% highlight ruby %}
+```c
 	/* Get the sum of the specified field (converted form kb to bytes) in
 	 * /proc/self/smaps. The field must be specified with trailing ":" as it
 	 * apperas in the smaps output.
@@ -374,7 +402,7 @@ redis 通过公式 `RSS / allocated-bytes` 来计算内存使用率，通过上�
 	size_t zmalloc_get_private_dirty(void) {
 	    return zmalloc_get_smap_bytes_by_field("Private_Dirty:");
 	}
-{% endhighlight %}
+```
 
 `Private_Dirty` 和 `Private_Clean`，进程fork时，开始内存是共享的，即从父进程那里继承的内存空间都是 `Private_Clean`，运行一段时间之后，子进程对继承的内存空间做了修改，这部分内存就不能与父进程共享了，需要多占用，这部分就是 `Private_Dirty`。
 

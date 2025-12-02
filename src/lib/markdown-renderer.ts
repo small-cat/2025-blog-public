@@ -18,22 +18,26 @@ export function slugify(text: string): string {
 }
 
 export async function renderMarkdown(markdown: string): Promise<MarkdownRenderResult> {
-	// Parse TOC from markdown
+	// Parse tokens and extract TOC
+	const tokens = marked.lexer(markdown)
+
+	// Parse TOC from markdown tokens, ignoring content inside code blocks
 	const toc: TocItem[] = []
-	for (const line of markdown.split('\n')) {
-		const m = /^(#{1,3})\s+(.+)$/.exec(line.trim())
-		if (m) {
-			const level = m[1].length
-			const text = m[2].trim()
-			const id = slugify(text)
-			toc.push({ id, text, level })
+	for (const token of tokens) {
+		// Only process headings, ignore anything else (including code blocks)
+		if (token.type === 'heading') {
+			const headingToken = token as Tokens.Heading
+			const id = slugify(headingToken.text || '')
+			toc.push({
+				id,
+				text: headingToken.text || '',
+				level: headingToken.depth
+			})
 		}
 	}
 
 	// Pre-process code blocks with Shiki
 	const codeBlockMap = new Map<string, { html: string; original: string }>()
-	const tokens = marked.lexer(markdown)
-
 	for (const token of tokens) {
 		if (token.type === 'code') {
 			const codeToken = token as Tokens.Code

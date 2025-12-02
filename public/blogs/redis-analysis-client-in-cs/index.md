@@ -2,17 +2,18 @@ redis服务器是典型的一对多的服务器应用程序：一个服务器可
 通过使用I/O多路复用技术， redis 服务器使用单线程单进程的方式处理命令请求，并与多个客户端连接进行网络通讯。
 
 ## 根据 redis-cli.c 中main函数分析客户端的启动流程
-![client flow](http://oszgzpzz4.bkt.clouddn.com/image/redis_analysis/client-flow.png) <br>
-上图因为在 Visio 中画的，截图的时候图方便，看起来像然在一起。(:haha)
+![](/blogs/redis-analysis-client-in-cs/1.png)
 
 下面看一下客户端的两个重要的全局变量
 
+```c
 	static redisContext *context;
 	static struct config
+```
 
 启动客户端时，会初始化 `config` 全局变量，该变量记录了客户端几乎所有的配置参数信息，而 `context` 用于连接 redis 服务器。看一下 config 的结构
 
-{% highlight ruby %}
+```c
 	static struct config {
 	    char *hostip;	// IP
 	    int hostport;	//端口
@@ -50,11 +51,11 @@ redis服务器是典型的一对多的服务器应用程序：一个服务器可
 	    char *eval;
 	    int last_cmd_type;
 	} config;
-{% endhighlight %}
+```
 
 客户端在 `parseOptions()` 中设置 config 变量参数
 
-{% highlight ruby %}
+```c
 	static int parseOptions(int argc, char **argv) {
 	    int i;
 	
@@ -148,10 +149,11 @@ redis服务器是典型的一对多的服务器应用程序：一个服务器可
 	    }
 	    return i;
 	}
-{% endhighlight %}
+```
 
 上述解析命令行参数的各个参数信息，在客户端，使用 `--help` 就能看到，
 
+```c
 	void usage(void) {
 	    fprintf(stderr,"Usage: ./redis-server [/path/to/redis.conf] [options]\n");
 	    fprintf(stderr,"       ./redis-server - (read config from stdin)\n");
@@ -168,12 +170,13 @@ redis服务器是典型的一对多的服务器应用程序：一个服务器可
 	    fprintf(stderr,"       ./redis-server /etc/sentinel.conf --sentinel\n");
 	    exit(1);
 	}
+```
 
 根据不同的参数，设置 config 的值，然后，根据命令行参数设定的值和模式(mode)，选择进入不同的模式与 redis 服务器进行通讯。在本机上，直接启动 redis 客户端，比如 `./redis-cli` ，这样客户端启动之后，进入的将是交互模式，`config.interactive = 1`，这种模式下，用户可以直接在客户端输入指令，并能立马得到服务器返回的信息。下面，主要介绍的就是交互模式。
 
 交互模式下，首先，需要连接服务器，这时，需要用到 context 变量
 
-{% highlight ruby %}
+```c
 	/* Connect to the server. If force is not zero the connection is performed
 	 * even if there is already a connected socket. */
 	static int cliConnect(int force) {
@@ -212,11 +215,12 @@ redis服务器是典型的一对多的服务器应用程序：一个服务器可
 	    }
 	    return REDIS_OK;
 	}
-{% endhighlight %}
+```
 
 当服务器连接成功时，context 的 fd 为连接成功后的 sockfd，flags 设置为
 REDIS_CONNECTED，redisContext 的结构如下
 
+```c
 	/* Context for a connection to Redis */
 	typedef struct redisContext {
 	    int err; /* Error flags, 0 when there is no error */
@@ -226,6 +230,7 @@ REDIS_CONNECTED，redisContext 的结构如下
 	    char *obuf; /* Write buffer */
 	    redisReader *reader; /* Protocol reader */
 	} redisContext;
+```
 
 当连接服务器或者命令发生错误时，err将设置为非0数字，errstr 中将记录错误信息，连接成功时，将 socket 套接字的文件描述符记录在 fd 中，同时 flags 设置为 REDIS_CONNECTED，obuf 为输出缓存，客户端发送给服务器的命令信息，解析后存放在 obuf 中，reader 作为协议解析器，用于读取和分析服务器返回的信息。
 
@@ -237,13 +242,14 @@ REDIS_CONNECTED，redisContext 的结构如下
 ## 客户端的交互模式
 ### 准备工作
 客户端进入交互模式如下所示 <br>
-![redis client interactive mode](http://oszgzpzz4.bkt.clouddn.com/image/redis_analysis/redis-cli-interactive-mode.png) <br>
+![redis client interactive mode](/blogs/redis-analysis-client-in-cs/2.png) <br>
 也就是说，在用户通过客户端与服务器交互之前，还需要一些准备工作。
 
 redis 会将在客户端上操作的所有命令记录在一个历史文件中 `historyfile`，如果没有设置，一般默认为 `$HOME/.rediscli_history` 文件。同时，设置提示信息 `config.prompt`，如上图所示的提示信息为 "127.0.0.1:6379>"，这里默认的数据库编号为 0 ，所以没有显示出来，如果是非 0 的数据库，比如是 1，需要重新设置提示信息，为 "127.0.0.1:6379[1]>"。
 
 ### 在交互模式下获取用户输入
-{% highlight ruby %}
+
+```c
 	/* The high level function that is the main API of the linenoise library.
 	 * This function checks if the terminal has basic capabilities, just checking
 	 * for a blacklist of stupid terminals, and later either calls the line
@@ -271,11 +277,11 @@ redis 会将在客户端上操作的所有命令记录在一个历史文件中 `
 	        return strdup(buf);
 	    }
 	}
-{% endhighlight %}
+```
 
 redis 通过上面的 `linenoise()` 函数获取用户输入，首先判断当前终端是不是 redis 所支持的终端类型（通过判断环境变量 `TERM`），如果不是，通过 fgets 函数获取用户输入；如果是支持的终端，那么首先通过 `termios` 相关的API，将 term 设置为 `raw mode`，该模式下，用户输入一个字符时，程序就会立即处理，类似于ncurses 中的 cbreak 模式，在 `linenoiseEdit()` 函数中，redis 对用户键盘的各种操作进行处理，并记录用户输入的有效字符
 
-{% highlight ruby %}
+```c
 	/* This function is the core of the line editing capability of linenoise.
 	 * It expects 'fd' to be already in "raw mode" so that every key pressed
 	 * will be returned ASAP to read().
@@ -459,25 +465,29 @@ redis 通过上面的 `linenoise()` 函数获取用户输入，首先判断当�
 	    }
 	    return l.len;
 	}
-{% endhighlight %}
+```
 
 获取用户输入之后，将用户输入写入到历史文件中 `historyfile` 中，并将用户输入的命令参数解析后，发送到服务器。
 
 ## 客户端发送消息到服务器
 客户端获取用户输入的命令及参数之后
 
+```
 	argv = sdssplitargs(line,&argc);
+```
 	
 将命令参数放到 argv 数组中，通过 `cliSendCommand()` 发送给服务器
 
 客户端发送命令和接受结果的函数调用关系如下: <br>
 
+```c
 	cliSendCommand -> redisAppendCommandArgv -> redisFormatCommandArgv这是根据 redis 协议格式化输出，发送到服务器
 	cliSendCommand -> cliReadReply -> redisGetReply ->
 	redisBufferWrite 和 redisBufferRead 发送和接收
+```
 
 ### redis 协议格式
-{% highlight ruby %}
+```c
 	/* Format a command according to the Redis protocol. This function takes the
 	 * number of arguments, an array with arguments and an array with their
 	 * lengths. If the latter is set to NULL, strlen will be used to compute the
@@ -516,10 +526,12 @@ redis 通过上面的 `linenoise()` 函数获取用户输入，首先判断当�
 	    *target = cmd;
 	    return totlen;
 	}
-{% endhighlight %}
+```
 
 `redisFormatCommandArgv` 函数是将客户端输入的命令按照 `redis protocol` 格式化，然后发送给服务器。比如 `SET NAME "redis"`，按照 `Redis protocol` 格式化成 
 
+```
 	*3\r\n$3\r\nSET\r\n$4\r\nNAME\r\n$5\r\nredis\r\n
+```
 	
 每一个元素都是以 `\r\n` 分割，最前面 `*3` 表示该条命令有三个元素，后面 `$3` 表示当前元素的长度为3

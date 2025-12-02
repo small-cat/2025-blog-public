@@ -1,16 +1,5 @@
 [
   {
-    "slug": "liquid-grass",
-    "title": "好玩的液态玻璃",
-    "tags": [
-      "液态玻璃",
-      "ios"
-    ],
-    "date": "2025-11-21",
-    "summary": "很简单就能实现这个液态玻璃效果，真棒",
-    "cover": "/blogs/liquid-grass/0e7190ecaedc4930.png"
-  },
-  {
     "title": "搭建本地git服务器",
     "tags": [
       "git",
@@ -90,19 +79,7 @@
     "summary": "本文主要是讲述在 scrapy 爬虫时，发现 Request 函数中的回调函数没有被调用的解决办法",
     "cover": "",
     "slug": "scrapy-not-called-callback"
-  },
-  {
-    "title": "面试总结1",
-    "tags": [
-      "面试",
-      "redis",
-      "字节序"
-    ],
-    "date": "2017-03-15",
-    "summary": "记一次面试总结",
-    "cover": "",
-    "slug": "summary-of-interview-1"
-  },
+  }, 
   {
     "title": "动态数组的内存增长因子如何选择-1.5倍还是2倍",
     "tags": [
@@ -137,18 +114,7 @@
     "summary": "内存泄漏是什么，内存泄漏有那些现象发生，如何定位和排查。本文试图从三个方法来说明内存泄漏排查的手段，并说明其原理。",
     "cover": "",
     "slug": "talk-about-memory-leak"
-  },
-  {
-    "title": "面试总结三",
-    "tags": [
-      "interview",
-      "考题"
-    ],
-    "date": "2017-09-30",
-    "summary": "记一次面试总结",
-    "cover": "",
-    "slug": "summary-of-interview"
-  },
+  }, 
   {
     "title": "对C++虚函数和虚继承的理解",
     "tags": [
@@ -389,6 +355,18 @@
     "slug": "redis-analysis-memory-management"
   },
   {
+    "title": "面试总结1",
+    "tags": [
+      "面试",
+      "redis",
+      "字节序"
+    ],
+    "date": "2017-03-15",
+    "summary": "记一次面试总结",
+    "cover": "",
+    "slug": "summary-of-interview-1"
+  },
+  {
     "title": "面试总结2",
     "tags": [
       "面试",
@@ -400,6 +378,17 @@
     "summary": "记一次面试总结",
     "cover": "",
     "slug": "summary-of-interview-2"
+  },
+  {
+    "title": "面试总结三",
+    "tags": [
+      "interview",
+      "考题"
+    ],
+    "date": "2017-09-30",
+    "summary": "记一次面试总结",
+    "cover": "",
+    "slug": "summary-of-interview"
   },
   {
     "title": "redis中 lua 环境的创建和初始化",

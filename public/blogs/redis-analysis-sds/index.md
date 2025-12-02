@@ -5,11 +5,13 @@
 
 redis 使用的字符串抽象数据类型为 SDS (simple dynamic string)。其结构如下所示：
 
+```c
     struct sdshdr {
     	unsigned int len;	//表示字符串长度，即字符数组buf已使用的长度
     	unsigned int free;	//表示buf 数组中尚未使用的字节数
     	char buf[];		//保存字符串，这是一个可变数组
     };
+```
 	
 **上述结构属于C99中的伸缩数组(flexible array)，是对结构体功能的扩展。在结构体的原型申明时，可以申明一个没有指定数组长度的数组，在使用是，通过malloc动态决定结构体变量的数组大小。**
 
@@ -17,26 +19,33 @@ sds 不同于传统的 C 字符串，它的好处显而易见。
 
 1、 能够在常数复杂度内获取字符串的长度，直接返回 len 就可以了。
 
+```c
     static inline size_t sdslen(const sds s) {
     	struct sdshdr *sh = (void*)(s-(sizeof(struct sdshdr)));		//sds s = sdsnew创建的,返回的是
 					//struct sdshdr *shnew->buf，往后偏移了8个字节，这里往前偏移8个字节
     	return sh->len;
     }
+```
 	
 其中的 sds 的定义为
 
+```
 	typedef char* sds;
+```
+
 因为 sdshdr 的 buf 成员是可变长数组， sizeof 是得不到长度的，所以sizeof(sdshdr)为8，每次创建 sdshdr结构体的时候，返回的都是buf这个字符串，即指针位置向后移动了 sizeof (sdshdr)这个长度，所以在上面由字符串获取 sdshdr 结构体的地址的时候，再往前偏移 sizeof (sdshdr) 个地址，然后直接获取长度 len
 
 2、 sds 所有API均是二进制安全的，在 sdsnewlen 函数的注释中，有这么一段注释
 
+```
      * You can print the string with printf() as there is an implicit \0 at the
      * end of the string. However the string is binary safe and can contain
      * \0 characters in the middle, as the length is stored in the sds header.
+```
 	 
 sds 字符串的末尾有一个 '\0' 结尾，作为字符串的结尾，但是为了适应各种类型的数据，同时，还是二进制安全的，在buf 的中间是可以有 '\0' 空字符的，因为取数据不是按照字符串的结尾空字符，而是根据 sdshdr 结构体中的 len 长度来获取的。
 
-{% highlight ruby %}
+```c
 	sds sdsnewlen(const void *init, size_t initlen) {
 	    struct sdshdr *sh;
 	
@@ -53,12 +62,12 @@ sds 字符串的末尾有一个 '\0' 结尾，作为字符串的结尾，但是�
 	    sh->buf[initlen] = '\0';
 	    return (char*)sh->buf;	//返回 sds 字符串
 	}
-{% endhighlight %}
+```
 
 3、 杜绝缓冲区溢出，减少修改字符串带来的内存重复分配的次数 <br>
 sds 在调用 sdscat等字符串拼接类的API时，都会调整空间大小，即增加free的大小，保证不会发生缓冲区溢出
 
-{% highlight ruby %}
+```c
 	//这个函数不会改变字符串的值，也不会改变len 的长度，只是增加了free的大小
 	sds sdsMakeRoomFor(sds s, size_t addlen) {
 	    struct sdshdr *sh, *newsh;
@@ -79,13 +88,13 @@ sds 在调用 sdscat等字符串拼接类的API时，都会调整空间大小，
 	    newsh->free = newlen - len;
 	    return newsh->buf;
 	}
-{% endhighlight %}
+```
 
 调整sds 的空间大小时， 如果执行的是拼接字符串操作，长度为 addlen，那么先判断剩余可分配内存的大小 free，如果空间足够，不需要调整，否则，当 newlen 小于 1M 时，增加newlen 的一倍，拼接后，free 的长度同样为newlen，否则，增加 1M的长度。
 
 而且sds采用的是惰性空间释放策略，并不是真正的释放内存空间
 
-{% highlight ruby %}
+```c
 	sds sdstrim(sds s, const char *cset) {
 	    struct sdshdr *sh = (void*) (s-(sizeof(struct sdshdr)));
 	    char *start, *end, *sp, *ep;
@@ -102,7 +111,7 @@ sds 在调用 sdscat等字符串拼接类的API时，都会调整空间大小，
 	    sh->len = len;
 	    return s;
 	}
-{% endhighlight %}
+```
 
 仅仅是将增加free的长度，并将buf 和len的值进行调整，这样，当下一次对该 sds 进行字符串拼接的操作时，不需要频繁重复的申请空间，减少了内存申请的次数。
 
@@ -118,7 +127,7 @@ sds 具有以下优点：
 
 其他的相关API函数解析
 
-{% highlight ruby %}
+```c
 	/* Helper for sdscatlonglong() doing the actual number -> string
 	 * conversion. 's' must point to a string with room for at least
 	 * SDS_LLSTR_SIZE bytes.
@@ -157,11 +166,11 @@ sds 具有以下优点：
 	    }
 	    return l;	//返回转换后的字符串的长度
 	}
-{% endhighlight %}
+```
 
 格式化输出函数 sdscatfmt，比sdscatprintf 性能好，因为后者依赖于libc 中的 sprintf() 家族，这种会比较慢，同时直接操作 sds 字符串性能会更好
 
-{% highlight ruby %}
+```c
 	/* This function is similar to sdscatprintf, but much faster as it does
 	 * not rely on sprintf() family functions implemented by the libc that
 	 * are often very slow. Moreover directly handling the sds string as
@@ -277,11 +286,11 @@ sds 具有以下优点：
 	    s[i] = '\0';
 	    return s;
 	}
-{% endhighlight %}
+```
 
 上述这个函数的完整写法可以借鉴，当需要自己处理格式化字符串的时候，libc 提供的格式化字符串的函数 sprintf... 会对性能有一定的影响。
 
-{% highlight ruby %}
+```c
 	/* Split 's' with separator in 'sep'. An array
 	 * of sds strings is returned. *count will be set
 	 * by reference to the number of tokens returned.
@@ -350,4 +359,4 @@ sds 具有以下优点：
 	        return NULL;
 	    }
 	}
-{% endhighlight %}
+```

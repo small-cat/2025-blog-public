@@ -17,7 +17,7 @@
 
 在32位机器上，每个进程都具有4GB的寻址能力。Linux系统会默认将高地址的1GB空间分配给内核，剩余的低3GB是用户可以使用的用户空间。下图是32位机器上Linux进程的一个典型的内存布局。
 
-![32bit memory prototype](https://static001.geekbang.org/resource/image/61/b2/61ee74faa861797b34397ed837a027b2.jpg?wh=2284x1808)
+![32bit memory prototype](/blogs/talk-about-memory-leak/memory-prototype.webp)
 
 <p align="center"><font size=2>图片来自极客时间</font></p>
 
@@ -32,13 +32,13 @@
 
 64位系统理论的寻址范围是2^64，也就是16EB。但是，依据 Intel 64 架构里定义的 canonical form 标准，64 位系统目前只支持低 48 位的总线寻址，在第 48-63 位填充全 0 或者全 1。也就是说，64为系统的寻址能力为 2^48，即 256 TB。而且根据canonical address的划分，地址空间天然地被分割成两个区间，分别是`0x0 - 0x00007fffffffffff`和`0xffff800000000000 - 0xffffffffffffffff` 两个 128 T 的空间。下面这张图展示了Intel 64机器上的Linux进程内存布局：
 
-![128 bit memory prototype](https://static001.geekbang.org/resource/image/12/1c/1258dabe44e33c66c0f423d8d24a8f1c.jpg?wh=2284x1578)
+![128 bit memory prototype](/blogs/talk-about-memory-leak/memory-prototype-128bit.webp)
 
 <p align="center"><font size=2>图片来自极客时间</font></p>
 
 我们用一张图，来表示进程的地址空间。图的左侧是说进程可以通过什么方式来更改进程虚拟地址空间，而中间就是进程虚拟地址空间是如何划分的，右侧则是进程的虚拟地址空间所对应的物理内存或者说物理地址空间。
 
-![memory structure of process](https://static001.geekbang.org/resource/image/c3/32/c321c56a7b719bf14b0b5133d0a66132.jpg)
+![memory structure of process](/blogs/talk-about-memory-leak/memory-structure.webp)
 
 <p align="center"><font size=2>图片来自极客时间</font></p>
 
@@ -46,7 +46,7 @@
 
 我们用一张表格来简单汇总下这些不同的申请方式所对应的不同内存类型。
 
-![mmap private share annon file](https://static001.geekbang.org/resource/image/85/0f/85e7da0e15587c6a1d31f7e60e1ab00f.jpg)
+![mmap private share annon file](/blogs/talk-about-memory-leak/filemap-annoy.webp)
 
 <p align="center"><font size=2>图片来自极客时间</font></p>
 
