@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { toast } from 'sonner'
 import { useMarkdownRender } from '@/hooks/use-markdown-render'
@@ -8,6 +8,7 @@ import { pushAbout, type AboutData } from './services/push-about'
 import { useAuthStore } from '@/hooks/use-auth'
 import LikeButton from '@/components/like-button'
 import GithubSVG from '@/svgs/github.svg'
+import { readFileAsText } from '@/lib/file-utils'
 import initialData from './list.json'
 
 export default function Page() {
@@ -16,75 +17,37 @@ export default function Page() {
 	const [isEditMode, setIsEditMode] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
 	const [isPreviewMode, setIsPreviewMode] = useState(false)
+	const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(true)
 	const keyInputRef = useRef<HTMLInputElement>(null)
 
-	const { isAuth, setPrivateKey } = useAuthStore()
-	const { content, loading } = useMarkdownRender(data.content)
-
-	const handleChoosePrivateKey = async (file: File) => {
-		try {
-			const text = await file.text()
-			setPrivateKey(text)
-			await handleSave()
-		} catch (error) {
-			console.error('Failed to read private key:', error)
-			toast.error('读取密钥文件失败')
+	// Fetch about.md from public directory
+	useEffect(() => {
+		const loadAboutMarkdown = async () => {
+			try {
+				const res = await fetch('/about.md')
+				if (res.ok) {
+					const content = await res.text()
+					setData(prev => ({
+						...prev,
+						content,
+						title: '个人简历'
+					}))
+				}
+			} catch (error) {
+				console.error('Failed to load about.md:', error)
+			} finally {
+				setIsLoadingMarkdown(false)
+			}
 		}
-	}
 
-	const handleSaveClick = () => {
-		if (!isAuth) {
-			keyInputRef.current?.click()
-		} else {
-			handleSave()
-		}
-	}
+		void loadAboutMarkdown()
+	}, [])
 
-	const handleEnterEditMode = () => {
-		setIsEditMode(true)
-		setIsPreviewMode(false)
-	}
-
-	const handleSave = async () => {
-		setIsSaving(true)
-
-		try {
-			await pushAbout(data)
-
-			setOriginalData(data)
-			setIsEditMode(false)
-			setIsPreviewMode(false)
-			toast.success('保存成功！')
-		} catch (error: any) {
-			console.error('Failed to save:', error)
-			toast.error(`保存失败: ${error?.message || '未知错误'}`)
-		} finally {
-			setIsSaving(false)
-		}
-	}
-
-	const handleCancel = () => {
-		setData(originalData)
-		setIsEditMode(false)
-		setIsPreviewMode(false)
-	}
-
-	const buttonText = isAuth ? '保存' : '导入密钥'
+	const { content, loading: isRendering } = useMarkdownRender(data.content)
+	const loading = isLoadingMarkdown || isRendering
 
 	return (
 		<>
-			<input
-				ref={keyInputRef}
-				type='file'
-				accept='.pem'
-				className='hidden'
-				onChange={async e => {
-					const f = e.target.files?.[0]
-					if (f) await handleChoosePrivateKey(f)
-					if (e.currentTarget) e.currentTarget.value = ''
-				}}
-			/>
-
 			<div className='flex flex-col items-center justify-center px-6 pt-32 pb-12 max-sm:px-0'>
 				<div className='w-full max-w-[800px]'>
 					{isEditMode ? (

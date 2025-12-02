@@ -67,18 +67,6 @@ export default function BlogPage() {
 	}, [filteredItems])
 
 	const selectedCount = selectedSlugs.size
-	const buttonText = isAuth ? '保存' : '导入密钥'
-
-	const toggleEditMode = useCallback(() => {
-		if (editMode) {
-			setEditMode(false)
-			setEditableItems(items)
-			setSelectedSlugs(new Set())
-		} else {
-			setEditableItems(items)
-			setEditMode(true)
-		}
-	}, [editMode, items])
 
 	const toggleSelect = useCallback((slug: string) => {
 		setSelectedSlugs(prev => {
@@ -102,77 +90,8 @@ export default function BlogPage() {
 		[editMode, toggleSelect]
 	)
 
-	const handleDeleteSelected = useCallback(() => {
-		if (selectedCount === 0) {
-			toast.info('请选择要删除的文章')
-			return
-		}
-		setEditableItems(prev => prev.filter(item => !selectedSlugs.has(item.slug)))
-		setSelectedSlugs(new Set())
-	}, [selectedCount, selectedSlugs])
-
-	const handleCancel = useCallback(() => {
-		setEditableItems(items)
-		setSelectedSlugs(new Set())
-		setEditMode(false)
-	}, [items])
-
-	const handleSave = useCallback(async () => {
-		const removedSlugs = items.filter(item => !editableItems.some(editItem => editItem.slug === item.slug)).map(item => item.slug)
-
-		if (removedSlugs.length === 0) {
-			toast.info('没有需要保存的改动')
-			return
-		}
-
-		try {
-			setSaving(true)
-			await batchDeleteBlogs(removedSlugs)
-			setEditMode(false)
-			setSelectedSlugs(new Set())
-		} catch (error: any) {
-			console.error(error)
-			toast.error(error?.message || '保存失败')
-		} finally {
-			setSaving(false)
-		}
-	}, [editableItems, items])
-
-	const handleSaveClick = useCallback(() => {
-		if (!isAuth) {
-			keyInputRef.current?.click()
-			return
-		}
-		void handleSave()
-	}, [handleSave, isAuth])
-
-	const handlePrivateKeySelection = useCallback(
-		async (file: File) => {
-			try {
-				const pem = await readFileAsText(file)
-				setPrivateKey(pem)
-				toast.success('密钥导入成功，请再次点击保存')
-			} catch (error) {
-				console.error(error)
-				toast.error('读取密钥失败')
-			}
-		},
-		[setPrivateKey]
-	)
-
 	return (
 		<>
-			<input
-				ref={keyInputRef}
-				type='file'
-				accept='.pem'
-				className='hidden'
-				onChange={async e => {
-					const f = e.target.files?.[0]
-					if (f) await handlePrivateKeySelection(f)
-					if (e.currentTarget) e.currentTarget.value = ''
-				}}
-			/>
 
 			<div className='flex flex-col items-center justify-center gap-6 px-6 pt-32 pb-12 max-sm:pt-28'>
 				<>
