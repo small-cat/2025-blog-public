@@ -19,7 +19,7 @@
     "date": "2016-12-22",
     "summary": "讲述在局域网范围内搭建 git 服务器的方法",
     "cover": "",
-    "slug": "setup-local-git-server"
+    "slug": "build-local-git-server"
   },
   {
     "title": "redis源码分析 - 对象",

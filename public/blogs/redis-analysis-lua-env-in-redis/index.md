@@ -2,14 +2,16 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 
 关于 `scriptingInit()` 的描述
 	
+```
 	/* Initialize the scripting environment.
 	 * It is possible to call this function to reset the scripting environment
 	 * assuming that we call scriptingRelease() before.
 	 * See scriptingReset() for more information. */
+```
 	 
 也就是说，这个函数是初始化lua环境的，当然，如果调用了 `scriptingRelease()` 在调用该函数，可以重置 lua 脚本环境。我们进入到函数中看一下代码。
 
-{% highlight ruby %}
+```c
 	void scriptingInit(void) {
 	    lua_State *lua = lua_open();
 	
@@ -133,11 +135,11 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 	
 	    server.lua = lua;
 	}
-{% endhighlight %}
+```
 
 1、 lua_open() 函数，创建一个lua环境 <br>
 2、 `luaLoadLibraries(lua)`，在新创建的lua环境中载入相应的库，同时删除库中不需要的函数，防止从外部引入不安全的代码 `luaRemoveUnsupportedFunctions(lua)`，
-
+```c
 	void luaLoadLibraries(lua_State *lua) {
 	    luaLoadLib(lua, "", luaopen_base);
 	    luaLoadLib(lua, LUA_TABLIBNAME, luaopen_table);
@@ -161,34 +163,45 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 	    lua_pushnil(lua);	//将空值入栈，此时栈顶元素为空值
 	    lua_setglobal(lua,"loadfile");	//出栈，取出栈顶元素，即空值，并将其作为 loadfile 的值，也就相当于取消了 loadfile 这个函数的作用，置空了
 	}
-	
+```
+
 3、 `lua_newtable(lua)` 创建一张空表，并入栈 <br>
 4、 将 c 中的luaRedisCallCommand 函数压入栈，作为表的函数；将 c 中的luaRedisPCallCommand 函数入栈，作为表的函数；将 c 中的luaLogCommand 函数入栈作为表的函数；将表复制为 redis，即创建 redis 全局 table。下面对其中一个注册函数进行解释
 
+```c
 	lua_newtable(lua);
 
     /* redis.call */
     lua_pushstring(lua,"call");
     lua_pushcfunction(lua,luaRedisCallCommand);
     lua_settable(lua,-3);
+```
 	
 首先创建一个空表，入栈，此时栈顶元素为 table。然后将字符串 "call" 入栈，再将 c 函数 luaRedisCallCommand 函数入栈
 
+```c
 	lua_settable(lua, -3)
+```
 	
 意思是 t[k]=v，t 为索引-3，栈中，-3 位元素 table，-1 为 luaRedisCallCommand，-2 为字符串call，v 表示栈顶元素，k表示栈顶元素的下一个元素，索引上面这个函数的意思就是
 
+```c
 	table[call]=luaRedisCallCommand
+```
 	
 就是将lua 中的call 函数注册为 c 中的 luaRedisCallCommand 函数，也可以记为
 
+```shell
 	table.call=luaRedisCallCommand
+```
 	
 后面代码意思都雷同，都是注册 c 函数到 lua 中。
 
 **注意：** `lua_settable(lua_State *L, int index)` 会将栈顶两个元素弹出。
 
+```c
 	lua_setglobal(lua, "redis")
+```
 	
 将表作为 redis的值，即创建的表为 redis 表，该表中包含以下函数： <br>
 
@@ -201,7 +214,7 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 5、 用 c 中自制的随机函数替换 Lua 中原有的随机函数 <br>
 6、 创建排序辅助函数， Lua 环境使用这个辅助函数来对一部分 redis 命令的结果进行排序，从而消除这些命令的不确定性。 <br>
 
-{% highlight ruby %}
+```c
 	function __redis__compare_helper(a,b)
 	    if a == false 
 		then 
@@ -213,11 +226,11 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 		end
 	    return a<b
 	end
-{% endhighlight %}
+```
 
 7、 创建 redis.pcall 函数的错误报告辅助函数，这个函数可以提供更加详细发出错信息，比如能够在 c 函数的出错信息中提供调用者的信息
 
-{% highlight ruby %}
+```c
 	local dbg = debug;
 	function __redis_err_handler(err)
 		local i = dbg.getinfo (2, 'sS1')
@@ -232,7 +245,7 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 			return err
 		end
 	end
-{% endhighlight %}
+```
 
 8、 对 lua 环境中的全局环境进行保护，防止用户在执行 lua 脚本的过程中，将额外的全局变量添加到 Lua 环境中 <br>
 9、 将完成修改的 lua 环境保存到服务器状态的 lua 属性中。
@@ -252,6 +265,7 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 
 那，到底是什么一个代码流程呢，因为 redis.call 和 redis.pcall 在初始化的时候，已经使用 c 中的函数进行了注册，所以当调用 redis.call 或者 redis.pcall 的时候实际唤醒调用的是 c 函数 luaRedisCallCommand 或者 luaRedisPCallCommand 
 
+```c
 	int luaRedisCallCommand(lua_State *lua) {
 	    return luaRedisGenericCommand(lua,1);
 	}
@@ -259,17 +273,20 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 	int luaRedisPCallCommand(lua_State *lua) {
 	    return luaRedisGenericCommand(lua,0);
 	}
+```
 	
 这两个函数，都是调用的 `luaRedisGenericCommand` 函数，此时，在 `luaGenericCommand` 函数中，在满足条件的情况下，调用 `luaSortArray` 函数。
 
+```c
 	if ((cmd->flags & REDIS_CMD_SORT_FOR_SCRIPT) &&
         (reply[0] == '*' && reply[1] != '-')) {
             luaSortArray(lua);
     }
+```
 	
 满足上面条件的时候，才调用 `luaSortArray` 这个函数，函数定义如下所示
 
-{% highlight ruby %}
+```c
 	/* Sort the array currently in the stack. We do this to make the output
 	 * of commands like KEYS or SMEMBERS something deterministic when called
 	 * from Lua (to play well with AOf/replication).
@@ -300,13 +317,14 @@ redis 中，lua 环境的初始化，是从 `redis.c/initServer()` 函数中，�
 	    /* Stack: array (sorted), table */
 	    lua_pop(lua,1);             /* Stack: array (sorted) */
 	}
-{% endhighlight %}
+```
 
 将 table.sort 中的 comp 参数作为 `__redis_compare_helper` 辅助排序函数进行排序
 
 # lua 环境协作组件
 lua 服务器创建了两个用于与 lua 环境进行写作的组件，分别是负责执行 lua 脚本的 redis 命令的伪客户端和保存 lua 脚本的 `lua_scripts` 字典。
 
+```c
 	typedef struct Server {
 		...
 		/* Scripting */
@@ -325,10 +343,12 @@ lua 服务器创建了两个用于与 lua 环境进行写作的组件，分别�
 	    int lua_kill;         /* Kill the script if true. */
 		...
 	};
+```
 
 ## 伪客户端
 redis 命令执行必须有相应的客户端状态，redis服务器专门为 lua 环境创建了一个伪客户端，server 中的 lua_client 成员就是 lua 的伪客户端，当初始化 lua 环境时，对伪客户端初始化如下(scriptingInit())：
 
+```c
 	   /* Create the (non connected) client that we use to execute Redis commands
 	     * inside the Lua interpreter.
 	     * Note: there is no need to create it again when this function is called
@@ -337,6 +357,7 @@ redis 命令执行必须有相应的客户端状态，redis服务器专门为 lu
 	        server.lua_client = createClient(-1);
 	        server.lua_client->flags |= REDIS_LUA_CLIENT;
 	    }
+```
 		
 Lua 脚本使用 redis.call 或者 redis.pcall 执行 redis 命令的时候，步骤如下： <br>
 
@@ -350,17 +371,21 @@ Lua 脚本使用 redis.call 或者 redis.pcall 执行 redis 命令的时候，�
 
 使用客户端执行lua脚本
 
+```shell
 	./redis-cli -h ${IP} -p ${PORT} -a ${PASSWORD} --eval <lua script>
+```
 	
 ## lua_scripts 字典
 另一个lua环境协作组件是 `lua_scripts` 字典。这个字典的值，是 lua 对应的脚本，键是 lua 脚本的 SHA1 校验和。这个可以在 `scripting.c/luaCreateFunction()` 函数中查看
 
+```c
 	  {
 	        int retval = dictAdd(server.lua_scripts,
 	                             sdsnewlen(funcname+2,40),body);	//dict, key is sha1, value is script
 	        redisAssertWithInfo(c,NULL,retval == DICT_OK);
 	        incrRefCount(body);
 	  }
+```
 	  
 funcname 就是 lua 脚本的SHA1校验和，body 就是 lua 对应的脚本
 
@@ -368,7 +393,7 @@ funcname 就是 lua 脚本的SHA1校验和，body 就是 lua 对应的脚本
 **第一步：** <br>
 当客户端向服务器发送 EVAL 命令执行一段 lua 脚本的时候，服务器首先在 lua 环境中，为传入的脚本定义一个 lua 函数，函数名由 f_ 前缀加上脚本的 SHA1 校验和，而函数体即为脚本本身。
 
-{% highlight ruby %}
+```c
 	void evalGenericCommand(redisClient *c, int evalsha) {
 	    lua_State *lua = server.lua;
 	    char funcname[43];
@@ -449,7 +474,7 @@ funcname 就是 lua 脚本的SHA1校验和，body 就是 lua 对应的脚本
 	    }
 		...
 	}
-{% endhighlight %}
+```
 
 首先解析参数，可以查看 EVAL 命令的语法
 
@@ -457,12 +482,14 @@ funcname 就是 lua 脚本的SHA1校验和，body 就是 lua 对应的脚本
 	
 在 lua 环境创建对应的 lua 函数，保存在变量 funcname 中，
 
+```c
 	funcname[0] = 'f';
 	funcname[1] = '_';
+```
 	
 表示函数名以 f_ 作为前缀，使用 shahex1() 函数获取脚本的 SHA1 校验和，保存在 funcname 中，此时的 funcname 将作为 lua 环境中脚本对应的函数名。使用 `luaCreateFunction` 函数在 lua 环境中创建该脚本的 lua 函数，同时将脚本即 lua 环境中对应的函数名加入到 `lua_scripts` 字典中。
 
-{% highlight ruby %}
+```c
 	/* Define a lua function with the specified function name and body.
 	 * The function name musts be a 2 characters long string, since all the
 	 * functions we defined in the Lua context are in the form:
@@ -507,17 +534,19 @@ funcname 就是 lua 脚本的SHA1校验和，body 就是 lua 对应的脚本
 	    }
 	    return REDIS_OK;
 	}
-{% endhighlight %}
+```
 
 **第二步：**<br>
 执行脚本之前，服务器还需要做一些设置钩子和传入参数的准备工作
 
 a、 将EVAL命令中传入的参数和脚本参数分为保存在 KEYS 和 ARGV 数组中，并作为全局变量保存在 lua 环境中
 
+```c
 	/* Populate the argv and keys table accordingly to the arguments that
 	     * EVAL received. */
 	    luaSetGlobalArray(lua,"KEYS",c->argv+3,numkeys); // KEYS[1]=XX, KEYS[2]=XX
 	    luaSetGlobalArray(lua,"ARGV",c->argv+3+numkeys,c->argc-3-numkeys);
+```
 		
 b、 为 lua 环境装载超时吃力钩子，当脚本运行时间超时时，客户端通过 SCRIPT KILL 命令可以停止脚本，也可以通过 SHUTDOWN 命令停止服务器。
 
@@ -525,6 +554,7 @@ c、 执行脚本 <br>
 d、 移除钩子
 e、 将执行脚本函数得到的结果保存到客户端状态的输出缓冲去，等待服务器将结果返回给客户端
 
+```c
 	if (err) {
 	        addReplyErrorFormat(c,"Error running script (call to %s): %s\n",
 	            funcname, lua_tostring(lua,-1));
@@ -535,6 +565,7 @@ e、 将执行脚本函数得到的结果保存到客户端状态的输出缓冲
 	        luaReplyToRedisReply(c,lua); /* Convert and consume the reply. */
 	        lua_pop(lua,1); /* Remove the error handler. */
 	 }
+```
 	 
 # EVALSHA 命令
 每一个被 EVAL 命令执行过的脚本，在 lua 环境中都会有一个与脚本对应的 lua 函数，函数的名字由 f_ 前缀和脚本的 SHA1 校验和组成。主要这个函数在 lua 环境中定义了，就会在 `lua_scripts` 中保存，那么使用 EVALSHA 命令，即使不知道脚本本身，也可以直接使用脚本的校验和来调用脚本对应的 lua 环境中的函数，这就是 EVALSHA 实现的原理
@@ -550,7 +581,7 @@ __SCRIPT LOAD__，首先在 lua 环境中为脚本创建对应的 lua 函数，�
 
 __SCRIPT KILL__，当服务器设置了参数 `lua-time-limit` 时，每次在执行 lua 脚本之前，都会设置一个超时钩子，脚本运行时，一旦钩子发现脚本运行时间已经超时，钩子将定期检查是否有 SCRIPT KILL 或者 SHUTDOWN 命令到达。如果超时脚本未执行任何写操作，客户端可以通过 SCRIPT KILL 命令停止脚本，并向执行脚本的客户端返回一个错误信息。处理完之后，服务器将继续执行。如果脚本已经执行过写操作，那么客户端只能通过 SHUTDOWN 命令停止服务器，防止不合法的数据写入服务器中。
 
-{% highlight ruby %}
+```c
 	/* ---------------------------------------------------------------------------
 	 * SCRIPT command for script environment introspection and control
 	 * ------------------------------------------------------------------------- */
@@ -602,7 +633,7 @@ __SCRIPT KILL__，当服务器设置了参数 `lua-time-limit` 时，每次在�
 	        addReplyError(c, "Unknown SCRIPT subcommand or wrong # of args.");
 	    }
 	}
-{% endhighlight %}
+```
 
 __参考文献：__ <br>
 1. Redis 设计与实现，黄健宏著，机械工业出版社 <br>

@@ -81,17 +81,8 @@ export default function Page() {
 				slug={slug}
 			/>
 
-			<motion.button
-				initial={{ opacity: 0, scale: 0.6 }}
-				animate={{ opacity: 1, scale: 1 }}
-				whileHover={{ scale: 1.05 }}
-				whileTap={{ scale: 0.95 }}
-				onClick={handleEdit}
-				className='absolute top-4 right-6 rounded-xl border bg-white/60 px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80 max-sm:hidden'>
-				编辑
-			</motion.button>
-
-			{slug === 'liquid-grass' && <LiquidGrass />}
+			{/*{slug === 'liquid-grass' && <LiquidGrass />} */}
+			<LiquidGrass />
 
 			{ /* vercel serverless 部署，是只读文件系统，不能保存和写文件 */}
 			{ /* <Comments articleId={slug} /> */}

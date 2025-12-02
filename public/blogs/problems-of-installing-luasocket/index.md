@@ -4,7 +4,7 @@
 	
 在我的 lua 环境中，直接使用出错了，因为这是一个外部c的动态库，需要下载编译配置好才能使用。
 
-luasocket 是Diego Nehab 写的，GitHub的地址为 [https://github.com/diegonehab/luasocket]，现在的版本较之前的版本做了一些改动。下面说一下编译和安装的期间的一些问题： <br>
+luasocket 是Diego Nehab 写的，GitHub的地址为 (`https://github.com/diegonehab/luasocket`)，现在的版本较之前的版本做了一些改动。下面说一下编译和安装的期间的一些问题： <br>
 1、 在根目录下有一个 makefile 文件，查看 makefile 文件，发现其实都是进入 src 目录后在进行编译的，具体的编译信息进入 src 中查看 makefile 文件
 
 2、 在src中，makefile 文件显示，luasocket 能够支持的平台有 linux, win32, Solaris, mingw, macosx。如果你是在 linux 中的话，

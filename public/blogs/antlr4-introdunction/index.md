@@ -141,34 +141,34 @@ async var async = 42;
 
    这样，标识符中包含了 `async`，就能正确表示了。
    
-   ## 表达式中的二义性(Parser)
+## 表达式中的二义性(Parser)
    
-   比如下面这个语法规则
-   
-   ```
-   stat: expr ';' // expression statement
-       | ID '(' ')' ';' // function call statement;
-       ;
-   expr: ID '(' ')'
-       | INT
-       ;
-   ```
-   
-   当 `ID '(' ')'` 出现时，我们不能确定，这是一个 `expression statement` 还是一个 `function call statement`，这就造成了二义性。
-   
-   ANTLR4 在生成此法分析器的过程中是不能检测二义性的，但是如果我们设定模式ALL(ALL 是一种动态算法 dynamic algorithm)，在分析过程中是可以确定二义性的。二义性可能出现在词法分析中，也可能出现在语法分析中，词法分析中的二义性的情况就是上一小节的情况，语法分析就是当前小节的情况。然而，对于一些语言(比如 c++)中，可以允许接受的一些二义性的情况，可以通过增加语义判定的方式解决(semantic predicates code insertions to resolve)，比如下面这种方式
-   
-   ```
-   expr: { isfunc(ID) }? ID '(' expr ')' // func call with 1 arg
-       | { istype(ID) }? ID '(' expr ')' // ctor-style type cast of expr
-       | INT
-       | void
-       ;
-   ```
-   
-   通过判定 `ID` 是 func 还是 expr，来决定是函数调用还是表达式。
-   
-   > 在 c++ 语法中，之前的版本有一个问题，就是 >> 的问题，>> 是一个右移运算符，同时，对于 `std::vector<std::list<std::string>>` 这种情况，最后面也出现了 >> 的符号，这个时候就出现了二义性的问题，这个方法是怎么解决的呢，**查看资料**
+比如下面这个语法规则
+
+```shell
+stat: expr ';' // expression statement
+    | ID '(' ')' ';' // function call statement;
+    ;
+expr: ID '(' ')'
+    | INT
+    ;
+```
+
+当 `ID '(' ')'` 出现时，我们不能确定，这是一个 `expression statement` 还是一个 `function call statement`，这就造成了二义性。
+
+ANTLR4 在生成此法分析器的过程中是不能检测二义性的，但是如果我们设定模式ALL(ALL 是一种动态算法 dynamic algorithm)，在分析过程中是可以确定二义性的。二义性可能出现在词法分析中，也可能出现在语法分析中，词法分析中的二义性的情况就是上一小节的情况，语法分析就是当前小节的情况。然而，对于一些语言(比如 c++)中，可以允许接受的一些二义性的情况，可以通过增加语义判定的方式解决(semantic predicates code insertions to resolve)，比如下面这种方式
+
+```
+expr: { isfunc(ID) }? ID '(' expr ')' // func call with 1 arg
+    | { istype(ID) }? ID '(' expr ')' // ctor-style type cast of expr
+    | INT
+    | void
+    ;
+```
+
+通过判定 `ID` 是 func 还是 expr，来决定是函数调用还是表达式。
+
+> 在 c++ 语法中，之前的版本有一个问题，就是 >> 的问题，>> 是一个右移运算符，同时，对于 `std::vector<std::list<std::string>>` 这种情况，最后面也出现了 >> 的符号，这个时候就出现了二义性的问题，这个方法是怎么解决的呢，**查看资料**
 
 # 几种常见的规则调试手段
 

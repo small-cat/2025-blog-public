@@ -44,6 +44,7 @@ UTF-8的编码规则很简单，只有二条：
 
 2）对于n字节的符号（n>1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。
 
+```
 	Unicode符号范围 | UTF-8编码方式
 	(十六进制) | （二进制）
 	--------------------+---------------------------------------------
@@ -52,6 +53,7 @@ UTF-8的编码规则很简单，只有二条：
 	0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
 	0001 0000-001F FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 	0020 0000-03FF FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+```
 	
 跟据上表，解读UTF-8编码非常简单。如果一个字节的第一位是0，则这个字节单独就是一个字符；如果第一位是1，则连续有多少个1，就表示当前字符占用多少个字节。
 
@@ -83,7 +85,7 @@ UTF-8的编码规则很简单，只有二条：
 	
 如下例子：
 
-{% highlight ruby %}
+```c
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <locale.h>
@@ -104,22 +106,27 @@ UTF-8的编码规则很简单，只有二条：
 	
 		return 0;
 	}
-{% endhighlight %}
+```
 	
 上述代码输出结果为：
-	
+```shell	
 	wide character: 倚楼听风雨
 	wide character: P
+```	
 	
 wprintf 使用的是宽字符流 (wide stream)，使用 %ls，wprintf 会将 wcs 看成是宽字符产，而 wcs 就是宽字符串，所以输出预期结果
 
+```shell	
 	wide character: 倚楼听风雨
+```
 	
 但是如果使用的是 %s，wprintf 会将对应的参数视为普通字符串 mbs，尽管我们还是很清楚它其实是个 wcs。wprintf 使用的是 wide stream,因此需要将所给的 mbs参数转换为 wcs 再由 wprintf 完成输出；这个转换是由 wprintf 隐式的对 mbs 不断调用mbrtowc来 完成，转换规则依然是和locale相关的。
 
 我们知道 "倚" 的 Unicode 编码为 U+501A，那么 wcs 的内存布局为
 
+```shell	
 	0x1a 0x50 0x00 0x00 0x7c 0x69 0x00 0x00
+```
 	
 LZ的机器为 little endian
 
@@ -130,8 +137,9 @@ LZ的机器为 little endian
 **可以试想一下，wprintf 是使用 wide stream，printf 是使用的 byte stream，两种不同的流模式是不能同时使用的，只能显示最先使用的那种。**
 
 当然，如果直接使用 printf 输出 wcs 也是可以的
-
+```c	
 	printf ("%ls\n", wcs);
+```
 	
 使用了 %ls，printf 会将对应的参数视为宽字符串(wcs)，而 printf 又对应byte stream，因此这里要对宽字符(wcs)进行转换，变成普通的字符串(mbs)。这里的转换是 printf 通过对每个宽字符隐式的调用 wcrtomb ()这个标准库函数完成的。按么，wcrtomb() 这个函数进行是按照什么规则进行转换的？这就是setlocale()的作用所在了，wcrtomb 会依据程序员设定的 locale，将 wcha_t中存放的码值，转换为相应的的多字节编码。
 

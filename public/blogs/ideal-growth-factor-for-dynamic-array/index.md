@@ -153,10 +153,7 @@ C++ 标准并没有强制要求 vector 类必须按照特定的方式管理内�
 
 **参考文献：**
 
-[^1]: http://www.drdobbs.com/c-made-easier-how-vectors-grow/184401375
-
-[^2]: https://en.wikipedia.org/wiki/Dynamic_array
-
-[^3]: https://stackoverflow.com/questions/1100311/what-is-the-ideal-growth-rate-for-a-dynamically-allocated-array#
-
-[^4]: https://github.com/facebook/folly/blob/master/folly/docs/FBVector.md
+1. http://www.drdobbs.com/c-made-easier-how-vectors-grow/184401375
+2. https://en.wikipedia.org/wiki/Dynamic_array
+3. https://stackoverflow.com/questions/1100311/what-is-the-ideal-growth-rate-for-a-dynamically-allocated-array#
+4. https://github.com/facebook/folly/blob/master/folly/docs/FBVector.md
