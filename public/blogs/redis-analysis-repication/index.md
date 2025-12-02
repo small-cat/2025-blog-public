@@ -1,6 +1,6 @@
 在 redis 中，用户可以通过执行 SLAVEOF 或者通过设置 slaveof 选项，让一个服务器去复制另一个服务器，我们称呼这为主备复制。
 
-> 查看__[redis主从复制]__：http://blog.wuzhenyu.com.cn/2016/12/15/how-to-build-redis-replication.html <br>
+> 查看[redis主从复制]：http://blog.wuzhenyu.com.cn/2016/12/15/how-to-build-redis-replication.html <br>
 也可以查看我在CSDN 上发的博客: http://blog.csdn.net/honglicu123/article/details/53693395
 
 
@@ -31,6 +31,7 @@ __缺点__： <br>
 ### 设置主服务器的地址和端口
 当从服务器的客户端发送 `slaveof` 命令时，从服务器会将客户端给定的服务器的 IP 地址和端口号保存在服务器状态的 `masterhost` 和 `masterport` 属性里面：
 
+```ruby
 {% highlight ruby %}
 	struct redisServer {
 		...
@@ -67,12 +68,14 @@ __缺点__： <br>
 		...
 	};
 {% endhighlight %}
+```
 
 slaveof 是一个异步命令，在完成属性的设置之后，从服务器将向客户端发送 OK，实际的复制工作将从这开始。
 
 ### 建立套接字连接
 _SLAVEOF_ 命令执行结束后，从服务器将根据命令所设置的 IP 地址和端口，创建连向主服务器的套接字连接。
 
+```ruby
 {% highlight ruby %}
 	/* Replication cron function, called 1 time per second. */
 	void replicationCron(void) {
@@ -116,12 +119,14 @@ _SLAVEOF_ 命令执行结束后，从服务器将根据命令所设置的 IP 地
 	    return REDIS_OK;
 	}
 {% endhighlight %}
+```
 
 如果从服务器创建的套接字能成功连接到主服务器，那么从服务器将会为这个套接字关联一个文件事件处理器(syncWithMaster)，负责执行后续的复制工作，如接收 RDB 文件，接收服务器传播来的写命令等。
 
 ### 发送 PING 命令
 从服务器成为主服务器的客户端之后，第一件事就是向主服务器发送 PING 命令。
 
+```ruby
 {% highlight ruby %}
 	void replicationCron (void)
 	{
@@ -202,6 +207,7 @@ _SLAVEOF_ 命令执行结束后，从服务器将根据命令所设置的 IP 地
 		...
 	}
 {% endhighlight %}
+```
 
 PING命令的作用: <br>
 
@@ -210,6 +216,7 @@ PING命令的作用: <br>
 
 如果从服务器读取到 "PONG" 回复，说明主从之间网络状态正常，能够进行后续的复制工作，从服务器可以继续执行复制操作的下一个步骤。其他异常情况下，从服务器将断开主服务器的连接，并重新创建连向主服务器的套接字。
 
+```ruby
 {% highlight ruby %}
 	/* Receive the PONG command. */
     if (server.repl_state == REDIS_REPL_RECEIVE_PONG) {
@@ -235,7 +242,10 @@ PING命令的作用: <br>
         server.repl_state = REDIS_REPL_SEND_AUTH;
     }
 {% endhighlight %}
+```
+
 ### 身份验证
+```ruby
 {% highlight ruby %}
 	/* AUTH with the master if required. */
 	    if (server.repl_state == REDIS_REPL_SEND_AUTH) {
@@ -261,6 +271,7 @@ PING命令的作用: <br>
 	        server.repl_state = REDIS_REPL_SEND_PORT;
 	    }
 {% endhighlight %}
+```
 
 从服务器设置了 masterauth 选项，将进行身份验证，否则，不会进行身份验证。但是会出现以下几种情况： <br>
 
@@ -269,6 +280,7 @@ PING命令的作用: <br>
 - 主服务器设置了 requirepass 选项，从服务器没有设置 masterauth 选项，那么主服务器将返回一个 `NOAUTH` 的错误；相反，如果主服务器没有设置 requirepass，而从服务器缺设置了 masterauth，那么主服务器将返回一个 `no password is set` 的错误信息。
 
 ### 发送端口信息
+```ruby
 {% highlight ruby %}
 		/* Set the slave port, so that Master's INFO command can list the
 	     * slave listening port correctly. */
@@ -283,10 +295,12 @@ PING命令的作用: <br>
 	        return;
 	    }
 {% endhighlight %}
+```
 
 从服务器发送 `REPLCONF listening-port <port>` ，向主服务器发送从服务器的监听端口号。主服务器接收后，会将端口号记录在从服务器对应的客户端状态结构体中的 `slave_listening_port` 属性中，在客户端执行 `INFO REPLICATION` 命令查看到的 port 参数的值就是这个属性的值。
 
 ### 同步
+```ruby
 {% highlight ruby %}
 		/* Try a partial resynchonization. If we don't have a cached master
 	     * slaveTryPartialResynchronization() will at least try to use PSYNC
@@ -363,9 +377,11 @@ PING命令的作用: <br>
 	        goto error;
 	    }
 {% endhighlight %}
+```
 
 按照上文代码中的注释，如果是初次复制，`we don't have a cached master`，采用的是 `full resynchronization`，获取 `master run id and the global offset`。如果是断线重连复制，使用的部分重复制 `partial resynchronization`。使用 `full resynchronization` 时，接收主服务器发送的 RDB 文件。
 
+```ruby
 {% highlight ruby %}
 	#define PSYNC_WRITE_ERROR 0
 	#define PSYNC_WAIT_REPLY 1
@@ -479,6 +495,7 @@ PING命令的作用: <br>
 	    return PSYNC_NOT_SUPPORTED;
 	}
 {% endhighlight %}
+```
 
 slaveTryPartialResynchronization 函数描述了主服务器接收到 `PSYNC` 命令时，返回给从服务器的几种情况。 如果从服务器与主服务器是初次复制，或者之前执行过 `slaveof no one` 命令，那么从服务器将向主服务器发送 `PSYNC ? -1` 命令，请求进行__完整重复制__；否则，从服务器向主服务器发送 `PSYNC <runid> <offset>` 命令，请求进行__部分重同步__。
 
@@ -488,6 +505,7 @@ slaveTryPartialResynchronization 函数描述了主服务器接收到 `PSYNC` �
 ### 命令传播
 当完成同步之后，主从服务器就会进入命令传播阶段。这时，主服务器只要一直将自己执行的写命令发送给从服务器，从服务器只需要一直接收和执行主服务器发送过来的写命令，就可以保证主从服务器数据库状态一致了。
 
+```ruby
 {% highlight ruby %}
 	void syncCommand (redisClient* c)
 	{
@@ -523,9 +541,11 @@ slaveTryPartialResynchronization 函数描述了主服务器接收到 `PSYNC` �
 		...
 	}
 {% endhighlight %}
+```
 
 复制积压缓冲区，就是一个循环数组，可以看成是一个队列，通过先进先出的方式，如果数组满了，会将最开始的那部分覆盖。
 
+```ruby
 {% highlight ruby %}
 	/* Feed the slave 'c' with the replication backlog starting from the
 	 * specified 'offset' up to the end of the backlog. */
@@ -579,10 +599,14 @@ slaveTryPartialResynchronization 函数描述了主服务器接收到 `PSYNC` �
 	    return server.repl_backlog_histlen - skip;
 	}
 {% endhighlight %}
+```
+
 ## 心跳检测
 在命令传播阶段，从服务器会默认以每秒一次的频率，向主服务器发送命令：
 
+```shell
 	REPLCONF ACK <replication_offset>
+```
 	
 `replication_offset` 是从服务器当前的复制偏移量。发送该命令的作用：
 
@@ -592,6 +616,7 @@ slaveTryPartialResynchronization 函数描述了主服务器接收到 `PSYNC` �
 
 replication.c 中的 `replicationCron` 函数每秒执行一次，
 
+```c
 	void replicationCron (void)
 	{
 		...
@@ -604,9 +629,11 @@ replication.c 中的 `replicationCron` 函数每秒执行一次，
 	
 		...
 	}
+```
 	
 从中可知， redis 从服务器会每秒向主服务器发送一次 ACK
 
+```ruby
 {% highlight ruby %}
 	/* Send a REPLCONF ACK command to the master to inform it about the current
 	 * processed offset. If we are not connected with a master, the command has
@@ -624,6 +651,7 @@ replication.c 中的 `replicationCron` 函数每秒执行一次，
 	    }
 	}
 {% endhighlight %}
+```
 
 `reploff` 是从服务器的复制偏移量
 ### 检测主从服务器的网络连接状态
@@ -634,13 +662,16 @@ replication.c 中的 `replicationCron` 函数每秒执行一次，
 ### 辅助实现 min-slaves
 在 redis 配置文件中，
 
+```shell
 	min-slaves-to-write 3
 	min-slaves-max-lag 10
+```
 	
 这两个参数，`require at least 3 slaves with a lag <= 10 seconds`，也就是说，当从服务器的数量少于三个或者三个从服务器的延迟 (lag) 都大于等于 10 秒时，主服务器将拒绝执行写命令。
 
 在 redis.c 的 `processCommand` 函数中实现
 
+```ruby
 {% highlight ruby %}
 	int processCommand (redisClient *c)
 	{
@@ -660,11 +691,13 @@ replication.c 中的 `replicationCron` 函数每秒执行一次，
 		...
 	}
 {% endhighlight %}
+```
 
 如果不满足条件，主服务器将返回 `-NOREPLICAS Not enough good slaves to write.`
 
 在 replication.c 的 `refreshGoodSlavesCount(void)` 函数中，会对 `repl_good_slaves_count` 这个属性进行更新。
 
+```ruby
 {% highlight ruby %}
 	/* This function counts the number of slaves with lag <= min-slaves-max-lag.
 	 * If the option is active, the server will prevent writes if there are not
@@ -688,3 +721,4 @@ replication.c 中的 `replicationCron` 函数每秒执行一次，
 	    server.repl_good_slaves_count = good;
 	}
 {% endhighlight %}
+```

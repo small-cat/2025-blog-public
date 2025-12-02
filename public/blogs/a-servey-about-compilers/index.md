@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 MIR 是独立于源语言和硬件架构的，所作的优化都是机器无关的优化工作，常见的形式有三地址代码(three address code, TAC)的形式。TAC的特点是，最多有三个地址（也就是变量），其中赋值符号的左边是用来写入的，而右边最多可以有两个地址和一个操作符，用于读取数据并计算。
 
-```
+```shell
 x = y op z
 x = uop y
 x = y
@@ -47,7 +47,7 @@ if x op y goto L
 
 比如
 
-```
+```shell
 do {
 	i = i + 1;
 	a[i]++;
@@ -56,7 +56,7 @@ do {
 
 TAC 的形式为
 
-```
+```shell
 L: i = i + 1
 t1 = a[i]
 t1 = t1 + 1
@@ -67,7 +67,7 @@ if t1 < v goto L
 
 `y = x1 + x2 + x3 + x4` 的普通三地址代码如下：
 
-```
+```shell
 y = x1 + x2;
 y = y + x3;
 y = y + x4;
@@ -75,7 +75,7 @@ y = y + x4;
 
 其中，y被赋值了三次，如果写成SSA的形式，就只能写成下面的样子：
 
-```
+```shell
 t1 = x1 + x2;
 t2 = t1 + x3;
 y  = t2 + x4; 
@@ -99,7 +99,7 @@ y  = t2 + x4;
 
 **思路3：** 消除重复的计算
 
-```
+```shell
 x = a + b
 y = x
 z = 2 * y
@@ -109,7 +109,7 @@ z = 2 * y
 
 值编号（Value Numbering）也能减少重复计算。值编号是把相同的值，在系统里给一个相同的编号，并且只计算一次即可。比如
 
-```
+```shell
 w = 3
 x = 3
 y = x + 4
@@ -120,7 +120,7 @@ w 和 x 的值相同，因此他们的编号相同，这又导致 y 和 z 的编
 
 还有一种优化方法叫做公共子表达式消除（Common Subexpression Elimination，CSE），也会减少计算次数。下面这两行代码，x和y右边的形式是一样的，如果这两行代码之间，a和b的值没有发生变化（比如采用SSA形式），那么x和y的值一定是一样的。
 
-```
+```shell
 x = a + b
 y = a + b
 ```
@@ -133,7 +133,7 @@ y = a + b
 
 看下面这个循环，其中的变量j是由循环变量派生出来的，这种变量叫做该循环的归纳变量。归纳变量的变化是很有规律的，因此可以尝试做强度折减优化。示例代码中的乘法可以由加法替代。
 
-```
+```shell
 int j = 0;
 for (int i = 1; i < 100; i++) {
     j = 2*i;  //2*i可以替换成j+2
@@ -149,7 +149,7 @@ return j;
 
 把循环次数减少，但在每一次循环里，完成原来多次循环的工作量。比如：
 
-```
+```shell
 for (int i = 0; i< 100; i++){
   sum = sum + i;
 }
@@ -157,7 +157,7 @@ for (int i = 0; i< 100; i++){
 
 优化后可以变成：
 
-```
+```shell
 for (int i = 0; i< 100; i+=5){
   sum = sum + i;
   sum = sum + i + 1;
@@ -179,7 +179,7 @@ for (int i = 0; i< 100; i+=5){
 
 在循环结构中，使用代数简化和重组，能获得更大的收益。比如，如下对数组的循环操作，其中数组 `a[i,j]` 的地址是`a+i*N+j`。但这个运算每次循环就要计算一次，一共要计算 `M*N` 次。但其实，这个地址表达式的前半截`a+i*N`不需要每次都在内循环里计算，只要在外循环计算就行了。
 
-```
+```shell
 for (i = 0; i< M; i++){
   for (j = 0; j<N; j++){
     a[i,j] = b + a[i,j];
@@ -189,7 +189,7 @@ for (i = 0; i< M; i++){
 
 优化后的代码相当于：
 
-```
+```shell
 for (i = 0; i< M; i++){
   t=a+i*N;
   for (j = 0; j<N; j++){
@@ -451,7 +451,7 @@ for (i = 0; i< M; i++){
 
 最终，一个 dl 模型翻译成的一个 IR 结果，就是一个 function，有输入和输出，函数体就是一个个表达式的计算。我们可以看下 tvm 生成的一个 IR 表示
 
-```
+```shell
 def @main(%data: Tensor[(1, 3, 224, 224), float32], %bn_data_gamma: Tensor[(3), float32], %bn_data_beta: Tensor[(3), float32], %bn_data_moving_mean: Tensor[(3), float32], %bn_data_moving_var: Tensor[(3), float32], %conv0_weight: Tensor[(64, 3, 7, 7), float32], %bn0_gamma: Tensor[(64), float32], %bn0_beta: Tensor[(64), float32],...)
   %1 = %0.0;
   %2 = nn.conv2d(%1, %conv0_weight, strides=[2, 2], padding=[3, 3, 3, 3], channels=64, kernel_size=[7, 7]) /* ty=Tensor[(1, 64, 112, 112), float32] */;
@@ -463,7 +463,7 @@ def @main(%data: Tensor[(1, 3, 224, 224), float32], %bn_data_gamma: Tensor[(3), 
 
 这个结构，与我们前面介绍的 SSA 非常相似，其实就是生成的一个基于 SSA 的中间表示结果 IR。我们可以看下 llvm ir 的样子，
 
-```
+```shell
 define i32 @fun1(i32, i32) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
@@ -482,7 +482,7 @@ define i32 @fun1(i32, i32) #0 {
 
 上面这个 llvm ir 片段是对
 
-```
+```shell
 int fun1(int a, int b){
     int c = 10;
     return a+b+c;
@@ -559,7 +559,7 @@ set(USE_LLVM /path/to/your/llvm/bin/llvm-config)
 最终进行编译
 
 ```shell
-cmake -DCMAKE_BUILD_TYPE=Debug .. # 打开 debug，也就是 -g 参数进行编译
+cmake -DCMAKE_BUILD_TYPE=Debug .. 
 make -j4
 ```
 
@@ -585,7 +585,7 @@ export PYTHONPATH=$TVM_HOME/python:${PYTHONPATH}
 使用 setup 的安装方式
 
 ```shell
-export MACOSX_DEPLOYMENT_TARGET=10.9  # This is required for mac to avoid symbol conflicts with libstdc++
+export MACOSX_DEPLOYMENT_TARGET=10.9  
 cd python
 python setup.py install --user
 cd ..
@@ -694,7 +694,6 @@ ls
 对于我们的 ResNet-50 v2 模型，输入应该是 ImageNet 格式。这是为 ResNet-50 v2 预处理图像的脚本示例。
 
 ```python
-#!python preprocess.py
 from tvm.contrib.download import download_testdata
 from PIL import Image
 import numpy as np
@@ -702,24 +701,19 @@ import numpy as np
 img_url = "https://s3.amazonaws.com/model-server/inputs/kitten.jpg"
 img_path = download_testdata(img_url, "imagenet_cat.png", module="data")
 
-### Resize it to 224x224
 resized_image = Image.open(img_path).resize((224, 224))
 img_data = np.asarray(resized_image).astype("float32")
 
-### ONNX expects NCHW input, so convert the array
 img_data = np.transpose(img_data, (2, 0, 1))
 
-### Normalize according to ImageNet
 imagenet_mean = np.array([0.485, 0.456, 0.406])
 imagenet_stddev = np.array([0.229, 0.224, 0.225])
 norm_img_data = np.zeros(img_data.shape).astype("float32")
 for i in range(img_data.shape[0]):
       norm_img_data[i, :, :] = (img_data[i, :, :] / 255 - imagenet_mean[i]) / imagenet_stddev[i]
 
-### Add batch dimension
 img_data = np.expand_dims(norm_img_data, axis=0)
 
-### Save to .npz (outputs imagenet_cat.npz)
 np.savez("imagenet_cat", data=img_data)
 ```
 
@@ -741,7 +735,6 @@ resnet50-v2-7-tvm.tar
 对输出后的预测结果进行处理，输出成可读(human readable format)的形式
 
 ```python
-#!python ./postprocess.py
 import os.path
 import numpy as np
 
@@ -749,7 +742,6 @@ from scipy.special import softmax
 
 from tvm.contrib.download import download_testdata
 
-### Download a list of labels
 labels_url = "https://s3.amazonaws.com/onnx-model-zoo/synset.txt"
 labels_path = download_testdata(labels_url, "synset.txt", module="data")
 
@@ -758,7 +750,6 @@ with open(labels_path, "r") as f:
 
 output_file = "predictions.npz"
 
-### Open the output and read the output tensor
 if os.path.exists(output_file):
     with np.load(output_file) as data:
         scores = softmax(data["output_0"])
@@ -804,7 +795,7 @@ tvmc compile --target "llvm" --tuning-records resnet50-v2-7-autotuner_records.js
 
 验证优化模型是否运行并产生相同的结果：
 
-```
+```shell
 tvmc run \
 --inputs imagenet_cat.npz \
 --output predictions.npz \
@@ -815,7 +806,7 @@ python postprocess.py
 
 #### 性能分析对比
 
-```
+```shell
 $ tvmc  run --inputs imagenet_cat.npz --output predictions.npz --print-time --repeat 100 resnet50-v2-7-tvm_autotuned.tar 
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
@@ -931,13 +922,13 @@ clang -print-supported-cpus
 - 根据优化目标探索搜索空间，找到最优解
 - 生成硬件所需指令、并部署到硬件上
 
-![](img/tvm_flow.png)
+![](/blogs/a-servey-about-compilers/tvm_flow.png)
 
 ## 3.3 实例分析 - yolov3
 
 使用 tvm 对 yolo v3 目标检测模型进行编译。本次实验环境为
 
-```
+```shell
 cpu: intel i5 8250u
 os: ubuntu 18.04
 g++/gcc: 7.5.0
@@ -952,20 +943,20 @@ tvm 官网提示的脚本中的模型相关的文件链接有些已经失效，�
 
 在 github 上，clone 仓库 `PyTorch-YOLOv3`
 
-```
+```shell
 git clone https://github.com/eriklindernoren/PyTorch-YOLOv3.git
 ```
 
 下载 weights 文件
 
-```
+```shell
 cd PyTorch-YOLOv3
 ./weights/download_weights.sh # 现在权重文件
 ```
 
 下载完成后，准备如下两个文件
 
-```
+```shell
 config/yolov3.cfg
 yolov3.weights
 ```
@@ -974,13 +965,13 @@ yolov3.weights
 
 clone darknet 仓库
 
-```
+```shell
 git clone https://github.com/pjreddie/darknet.git
 ```
 
 将仓库切换到 yolov3 分支进行编译，如果是其他分支，因为库中有更新，会导致加载模型的时候抛出异常。将 Makefile 文件的开头参数设置成如下
 
-```
+```shell
 GPU=0
 CUDNN=0
 OPENCV=0
@@ -994,7 +985,7 @@ DEBUG=0
 
 直接使用 darknet 进行推理
 
-```
+```shell
 ./darknet detect ../ml_model/yolov3/yolov3.cfg ../PyTorch-YOLOv3/yolov3.weights ../yolov3/data/images/bus.jpg
 
 ...
@@ -1011,7 +1002,7 @@ person: 98%
 
 使用 tvm 编译后，第一种是直接编译，第二种使用了量化优化，在进行的编译
 
-```
+```shell
 Loading the test image...
 Running the test image...
 {'mean': 1044.8609760023828, 'median': 1044.8609760023828, 'std': 0.0}

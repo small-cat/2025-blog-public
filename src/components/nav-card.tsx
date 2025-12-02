@@ -37,12 +37,14 @@ const list = [
 		label: '近期文章',
 		href: '/blog'
 	},
-	/*{
+
+	// 专门放置自己的专栏博客
+	{
 		icon: ProjectsOutlineSVG,
 		iconActive: ProjectsFilledSVG,
-		label: '我的项目',
+		label: '我的专栏',
 		href: '/projects'
-	}, */	
+	},
 
 	// 分享看到的优秀的文章
 	{
