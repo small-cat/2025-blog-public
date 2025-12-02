@@ -31,13 +31,13 @@ export function BlogSidebar({ cover, summary, toc, slug }: BlogSidebarProps) {
 
 	return (
 		<motion.div className='relative flex w-[200px] shrink-0 flex-col items-start gap-4 self-start max-sm:hidden' style={{ y: sidebarY }}>
-			{cover && (
+			{(
 				<motion.div
 					initial={{ opacity: 0, scale: 0.8 }}
 					animate={{ opacity: 1, scale: 1 }}
 					transition={{ delay: INIT_DELAY + ANIMATION_DELAY * 1 }}
 					className='w-full rounded-xl bg-white/40 p-3'>
-					<img src={cover} alt='cover' className='h-auto w-full rounded-xl border object-cover' />
+					<img src={cover || '/images/default_cover.png'} alt='cover' className='h-auto w-full rounded-xl border object-cover' />
 				</motion.div>
 			)}
 

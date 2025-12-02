@@ -32,7 +32,7 @@ export default function GridView({ bloggers, isEditMode = false, onUpdate, onDel
 			<div className='mb-8'>
 				<input
 					type='text'
-					placeholder='搜索博主...'
+					placeholder='搜索文章...'
 					value={searchTerm}
 					onChange={e => setSearchTerm(e.target.value)}
 					className='focus:ring-brand mx-auto block w-full max-w-md rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none'
@@ -47,7 +47,7 @@ export default function GridView({ bloggers, isEditMode = false, onUpdate, onDel
 
 			{filteredBloggers.length === 0 && (
 				<div className='mt-12 text-center text-gray-500'>
-					<p>没有找到相关博主</p>
+					<p>没有找到相关文章</p>
 				</div>
 			)}
 		</div>
