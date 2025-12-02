@@ -1,0 +1,7 @@
+{
+    "title": "use gdb kgdb and two virtual machines to debug linux kernel",
+    "tags": ["gdb","kgdb","kernel","debugging"],
+    "date": "2019-02-22",
+    "summary": "how to build environment for debugging linux kernel with gdb and kgdb ",
+    "cover": ""
+}

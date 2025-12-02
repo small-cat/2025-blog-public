@@ -2,20 +2,14 @@
   {
     "slug": "liquid-grass",
     "title": "好玩的液态玻璃",
-    "tags": [
-      "液态玻璃",
-      "ios"
-    ],
+    "tags": ["液态玻璃", "ios"],
     "date": "2025-11-21",
     "summary": "很简单就能实现这个液态玻璃效果，真棒",
     "cover": "/blogs/liquid-grass/0e7190ecaedc4930.png"
   },
   {
     "title": "搭建本地git服务器",
-    "tags": [
-      "git",
-      "搭建"
-    ],
+    "tags": ["git", "搭建"],
     "date": "2016-12-22",
     "summary": "讲述在局域网范围内搭建 git 服务器的方法",
     "cover": "",
@@ -23,236 +17,159 @@
   },
   {
     "title": "redis源码分析 - 对象",
-    "tags": [
-      "redis",
-      "object"
-    ],
+    "tags": ["redis", "object"],
     "date": "2016-11-08",
     "summary": "redis 对象浅析",
     "cover": "",
-    "slug": "redis-analysis-object"
+    "slug": "redis-object-analysis"
   },
   {
     "title": "antlr4 简介",
-    "tags": [
-      "antlr4",
-      "语法分析"
-    ],
+    "tags": ["antlr4", "语法分析"],
     "date": "2019-10-08",
     "summary": "简单介绍 antlr4的基本知识，介绍了antlr4 语法中二义性及解决思路，anrlr4 可能出现的错误，以及错误定位和解决的办法。",
     "cover": "",
-    "slug": "antlr4-introdunction"
+    "slug": "antlr4-introduction"
   },
   {
     "title": "redis源码分析 - 编程技巧总结",
-    "tags": [
-      "redis",
-      "编程",
-      "c语言",
-      "宏",
-      "变长数组"
-    ],
+    "tags": ["redis", "编程", "c语言", "宏", "变长数组"],
     "date": "2016-10-27",
     "summary": "从redis源码中学习到的编程技巧总结",
     "cover": "",
-    "slug": "redis-analysis-summary-of-learning"
+    "slug": "redis-programming-tricks"
   },
   {
     "title": "由竞争引发的一点思考",
-    "tags": [
-      "竞争"
-    ],
+    "tags": ["竞争"],
     "date": "2017-06-05",
     "summary": "阅读《ZERO TO ONE》读书笔记",
     "cover": "",
-    "slug": "thinking-about-competition"
+    "slug": "thoughts-on-competition"
   },
   {
     "title": "main 函数之前后",
-    "tags": [
-      "编译",
-      "glibc",
-      "链接",
-      "装载"
-    ],
+    "tags": ["编译", "glibc", "链接", "装载"],
     "date": "2019-02-21",
     "summary": "main 函数之前后",
     "cover": "",
-    "slug": "what-happened-before-and-after-main"
+    "slug": "before-and-after-main"
   },
   {
     "title": "scrapy - Request函数中回调函数未被调用的问题",
-    "tags": [
-      "scrapy",
-      "callback"
-    ],
+    "tags": ["scrapy", "callback"],
     "date": "2017-07-19",
     "summary": "本文主要是讲述在 scrapy 爬虫时，发现 Request 函数中的回调函数没有被调用的解决办法",
     "cover": "",
-    "slug": "scrapy-not-called-callback"
+    "slug": "scrapy-callback-not-called"
   },
   {
     "title": "面试总结1",
-    "tags": [
-      "面试",
-      "redis",
-      "字节序"
-    ],
+    "tags": ["面试", "redis", "字节序"],
     "date": "2017-03-15",
     "summary": "记一次面试总结",
     "cover": "",
-    "slug": "summary-of-interview-1"
+    "slug": "interview-summary-1"
   },
   {
     "title": "动态数组的内存增长因子如何选择-1.5倍还是2倍",
-    "tags": [
-      "代码风格",
-      "约束"
-    ],
+    "tags": ["代码风格", "约束"],
     "date": "2017-08-23",
     "summary": "What is the ideal growth rate for a dynamically allocated array?",
     "cover": "",
-    "slug": "ideal-growth-factor-for-dynamic-array"
+    "slug": "dynamic-array-growth-factor"
   },
   {
     "title": "随笔20180923",
-    "tags": [
-      "心情",
-      "随笔",
-      "回忆"
-    ],
+    "tags": ["心情", "随笔", "回忆"],
     "date": "2018-09-23",
     "summary": "想外公了",
     "cover": "",
-    "slug": "jottings"
+    "slug": "essay-20180923"
   },
   {
     "title": "浅谈内存泄漏",
-    "tags": [
-      "c/c++",
-      "linux",
-      "memoryleak"
-    ],
+    "tags": ["c/c++", "linux", "memoryleak"],
     "date": "2021-04-27",
     "summary": "内存泄漏是什么，内存泄漏有那些现象发生，如何定位和排查。本文试图从三个方法来说明内存泄漏排查的手段，并说明其原理。",
     "cover": "",
-    "slug": "talk-about-memory-leak"
+    "slug": "memory-leak-overview"
   },
   {
     "title": "面试总结三",
-    "tags": [
-      "interview",
-      "考题"
-    ],
+    "tags": ["interview", "考题"],
     "date": "2017-09-30",
     "summary": "记一次面试总结",
     "cover": "",
-    "slug": "summary-of-interview"
+    "slug": "interview-summary-3"
   },
   {
     "title": "对C++虚函数和虚继承的理解",
-    "tags": [
-      "c++",
-      "虚函数",
-      "虚继承"
-    ],
+    "tags": ["c++", "虚函数", "虚继承"],
     "date": "2017-03-31",
     "summary": "浅析对C++虚函数与虚继承的理解",
     "cover": "",
-    "slug": "understanding-about-virtual-function-and-virtual-inheritance"
+    "slug": "c++-virtual-functions-inheritance"
   },
   {
     "title": "如何构建自己的运行库",
-    "tags": [
-      "编译",
-      "glibc",
-      "链接",
-      "装载",
-      "运行库"
-    ],
+    "tags": ["编译", "glibc", "链接", "装载", "运行库"],
     "date": "2019-02-22",
     "summary": "glibc 提供了运行库，提供了入口函数，下面我们自己来实现一个mini运行库。",
     "cover": "",
-    "slug": "build-your-own-runtime-library"
+    "slug": "build-custom-runtime-library"
   },
   {
     "title": "luasocket的安装和部署",
-    "tags": [
-      "luasocket"
-    ],
+    "tags": ["luasocket"],
     "date": "2017-05-24",
     "summary": "本文主要介绍 luasocket 的安装和部署",
     "cover": "",
-    "slug": "problems-of-installing-luasocket"
+    "slug": "luasocket-installation"
   },
   {
     "title": "GDB学习总结",
-    "tags": [
-      "GDB",
-      "Debug"
-    ],
+    "tags": ["GDB", "Debug"],
     "date": "2017-10-02",
     "summary": "GDB 调试学习总结",
     "cover": "",
-    "slug": "summary-of-GDB"
+    "slug": "gdb-learning-summary"
   },
   {
     "title": "关于字符、字符集、unicode和编码",
-    "tags": [
-      "字符",
-      "字符集",
-      "unicode",
-      "编码"
-    ],
+    "tags": ["字符", "字符集", "unicode", "编码"],
     "date": "2016-12-29",
     "summary": "本文主要解释一下字符、字符集、unicode 和编码的概念",
     "cover": "",
-    "slug": "char-charset-unicode-coding"
+    "slug": "charsets-unicode-encoding"
   },
   {
     "title": "redis源码分析 - sds字符串结构",
-    "tags": [
-      "redis",
-      "sds"
-    ],
+    "tags": ["redis", "sds"],
     "date": "2016-10-27",
     "summary": "redis中简单动态字符串 sds 分析",
     "cover": "",
-    "slug": "redis-analysis-sds"
+    "slug": "redis-sds-analysis"
   },
   {
     "title": "redis源码分析 - cs结构分析之服务器",
-    "tags": [
-      "redis",
-      "code",
-      "cs",
-      "server",
-      "socket"
-    ],
+    "tags": ["redis", "code", "cs", "server", "socket"],
     "date": "2016-11-24",
     "summary": "redis 中cs结构的服务器的分析",
     "cover": "",
-    "slug": "redis-analysis-server-in-cs"
+    "slug": "redis-server-analysis"
   },
   {
     "title": "考前25天",
-    "tags": [
-      "感悟",
-      "目标",
-      "鸡汤"
-    ],
+    "tags": ["感悟", "目标", "鸡汤"],
     "date": "2018-09-02",
     "summary": "GRE 考试自省",
     "cover": "",
-    "slug": "25-days-before-GRE"
+    "slug": "25-days-before-exam"
   },
   {
     "title": "Git and Github",
-    "tags": [
-      "版本控制",
-      "git",
-      "github"
-    ],
+    "tags": ["版本控制", "git", "github"],
     "date": "2017-09-09",
     "summary": "The Difference Between Git and Github.",
     "cover": "",
@@ -260,239 +177,162 @@
   },
   {
     "title": "use gdb kgdb and two virtual machines to debug linux kernel",
-    "tags": [
-      "gdb",
-      "kgdb",
-      "kernel",
-      "debugging"
-    ],
+    "tags": ["gdb", "kgdb", "kernel", "debugging"],
     "date": "2019-02-22",
     "summary": "how to build environment for debugging linux kernel with gdb and kgdb ",
     "cover": "",
-    "slug": "env_prepare_for_kernel_debugging"
+    "slug": "debug-linux-kernel-with-gdb-kgdb"
   },
   {
     "title": "传统编译器和深度学习编译器的调研和理解",
-    "tags": [
-      "compiler",
-      "deep-learning-compiler",
-      "tvm",
-      "llvm"
-    ],
+    "tags": ["compiler", "deep-learning-compiler", "tvm", "llvm"],
     "date": "2022-05-01",
     "summary": "本文介绍传统编译器框架和深度学习编译器框架，通过两者对比说明了我对编译器的简单理解",
     "cover": "",
-    "slug": "a-servey-about-compilers"
+    "slug": "traditional-deep-learning-compilers"
   },
   {
     "title": "redis源码分析 - cs结构分析之客户端",
-    "tags": [
-      "redis",
-      "client",
-      "code",
-      "socket"
-    ],
+    "tags": ["redis", "client", "code", "socket"],
     "date": "2016-11-14",
     "summary": "redis源码分析，客户端解读",
     "cover": "",
-    "slug": "redis-analysis-client-in-cs"
+    "slug": "redis-client-analysis"
   },
   {
     "title": "redis 中的 reactor 模型分析",
-    "tags": [
-      "redis",
-      "reactor"
-    ],
+    "tags": ["redis", "reactor"],
     "date": "2016-12-12",
     "summary": "redis 中的 reactor 模型分析",
     "cover": "",
-    "slug": "redis-source-code-analysis-reactor-model"
+    "slug": "redis-reactor-model"
   },
   {
     "title": "cmake 编译带有版本号的动态库和链接不带版本的动态库",
-    "tags": [
-      "cmake",
-      "c++",
-      "linux"
-    ],
+    "tags": ["cmake", "c++", "linux"],
     "date": "2021-04-27",
     "summary": "cmake 中通过 `add_library` 可以编译带有版本号的动态库，但是链接这个动态库时，如何指定不带有版本号的动态库名称呢，本文带你找到答案",
     "cover": "",
-    "slug": "cmake-build-dynamic-lib-and-link"
+    "slug": "cmake-versioned-libraries"
   },
   {
     "title": "redis源码分析 - 字典结构",
-    "tags": [
-      "redis",
-      "dict"
-    ],
+    "tags": ["redis", "dict"],
     "date": "2016-10-30",
     "summary": "redis 字典对象分析",
     "cover": "",
-    "slug": "redis-analysis-dict"
+    "slug": "redis-dict-analysis"
   },
   {
     "title": "MySQL中SQL的调优方法",
-    "tags": [
-      "MySQL",
-      "SQL",
-      "调优"
-    ],
+    "tags": ["MySQL", "SQL", "调优"],
     "date": "2017-03-20",
     "summary": "MySQL中对SQL的调优方法",
     "cover": "",
-    "slug": "optimization-of-SQL-in-MySQL"
+    "slug": "mysql-sql-optimization"
   },
   {
     "title": "获取变化的的User-Agent和IP代理",
-    "tags": [
-      "user-agent",
-      "反爬虫",
-      "代理"
-    ],
+    "tags": ["user-agent", "反爬虫", "代理"],
     "date": "2017-08-02",
     "summary": "获取变化的User-Agent和IP代理，避免反爬虫策略",
     "cover": "",
-    "slug": "get-variable-useragent-and-ip-agent"
+    "slug": "dynamic-user-agent-ip-proxy"
   },
   {
     "title": "redis源码分析 - 复制",
-    "tags": [
-      "redis",
-      "replication"
-    ],
+    "tags": ["redis", "replication"],
     "date": "2017-05-26",
     "summary": "redis replication",
     "cover": "",
-    "slug": "redis-analysis-repication"
+    "slug": "redis-replication-analysis"
   },
   {
     "title": "scrapy的简单入门-爬取伯乐在线所有文章",
-    "tags": [
-      "scrapy",
-      "爬虫"
-    ],
+    "tags": ["scrapy", "爬虫"],
     "date": "2017-07-09",
     "summary": "使用 scrapy 实现爬虫",
     "cover": "",
-    "slug": "scrapy-start-catch-articles-on-jobbole"
+    "slug": "scrapy-tutorial-jobbole"
   },
   {
     "title": "redis源码分析 -- 内存管理",
-    "tags": [
-      "redis",
-      "内存管理"
-    ],
+    "tags": ["redis", "内存管理"],
     "date": "2016-11-03",
     "summary": "redis 内存管理",
     "cover": "",
-    "slug": "redis-analysis-memory-management"
+    "slug": "redis-memory-management"
   },
   {
     "title": "面试总结2",
-    "tags": [
-      "面试",
-      "指针",
-      "结构体",
-      "联合体"
-    ],
+    "tags": ["面试", "指针", "结构体", "联合体"],
     "date": "2017-03-28",
     "summary": "记一次面试总结",
     "cover": "",
-    "slug": "summary-of-interview-2"
+    "slug": "interview-summary-2"
   },
   {
     "title": "redis中 lua 环境的创建和初始化",
-    "tags": [
-      "redis",
-      "lua"
-    ],
+    "tags": ["redis", "lua"],
     "date": "2017-04-23",
     "summary": "redis 中 lua 环境解析",
     "cover": "",
-    "slug": "redis-analysis-lua-env-in-redis"
+    "slug": "redis-lua-environment"
   },
   {
     "title": "代码风格整理",
-    "tags": [
-      "代码风格",
-      "约束"
-    ],
+    "tags": ["代码风格", "约束"],
     "date": "2017-08-20",
     "summary": "代码风格整理",
     "cover": "",
-    "slug": "code-style"
+    "slug": "code-style-cleanup"
   },
   {
     "title": "代理的思想-实现lua中table的跟踪与只读",
-    "tags": [
-      "lua",
-      "proxy",
-      "table",
-      "跟踪",
-      "只读"
-    ],
+    "tags": ["lua", "proxy", "table", "跟踪", "只读"],
     "date": "2017-05-26",
     "summary": "本文使用 proxy 的思想实现 table 的跟踪与只读",
     "cover": "",
-    "slug": "trace-readonly-on-lua-table-with-proxy"
+    "slug": "lua-table-tracking-readonly"
   },
   {
     "title": "redis 主备演练",
-    "tags": [
-      "redis",
-      "主备"
-    ],
+    "tags": ["redis", "主备"],
     "date": "2016-12-15",
     "summary": "搭建redis主从复制环境",
     "cover": "",
-    "slug": "how-to-build-redis-replication"
+    "slug": "redis-master-slave-setup"
   },
   {
     "title": "redis源码分析 - 链表结构",
-    "tags": [
-      "redis",
-      "list",
-      "数据结构"
-    ],
+    "tags": ["redis", "list", "数据结构"],
     "date": "2016-11-01",
     "summary": "redis 链表解析",
     "cover": "",
-    "slug": "redis-analysis-list"
+    "slug": "redis-list-analysis"
   },
   {
     "title": "时区转换问题",
-    "tags": [
-      "redis",
-      "时区转换"
-    ],
+    "tags": ["redis", "时区转换"],
     "date": "2017-04-09",
     "summary": "对时区转换问题的总结",
     "cover": "",
-    "slug": "problem-about-zoneinfo_conversion"
+    "slug": "timezone-conversion-issues"
   },
   {
     "title": "使用session或scrapy模拟登录知乎",
-    "tags": [
-      "模拟登录",
-      "session",
-      "scrapy"
-    ],
+    "tags": ["模拟登录", "session", "scrapy"],
     "date": "2017-07-28",
     "summary": "使用session或scrapy模拟登录知乎，爬取知乎信息",
     "cover": "",
-    "slug": "login_zhihu_with_session_or_scrapy"
+    "slug": "simulate-login-zhihu"
   },
   {
     "title": "无厘语录 - 我到底在干啥",
-    "tags": [
-      "感悟",
-      "目标",
-      "鸡汤"
-    ],
+    "tags": ["感悟", "目标", "鸡汤"],
     "date": "2018-01-03",
     "summary": "吾日三省吾身",
     "cover": "",
-    "slug": "about-myself"
+    "slug": "random-thoughts-what-am-i-doing"
   }
 ]

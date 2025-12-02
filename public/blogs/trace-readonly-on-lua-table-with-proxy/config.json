@@ -1,0 +1,7 @@
+{
+    "title": "代理的思想-实现lua中table的跟踪与只读",
+    "tags": ["lua","proxy","table","跟踪","只读"],
+    "date": "2017-05-26",
+    "summary": "本文使用 proxy 的思想实现 table 的跟踪与只读",
+    "cover": ""
+}

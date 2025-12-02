@@ -230,7 +230,7 @@ export default function BlogPage() {
 							</div>
 						</motion.div>
 					))}
-					{items.length > 0 && (
+					{ /* {items.length > 0 && (
 						<div className='text-center'>
 							<motion.a
 								initial={{ opacity: 0, scale: 0.6 }}
@@ -244,7 +244,7 @@ export default function BlogPage() {
 								更多
 							</motion.a>
 						</div>
-					)}
+					)} */}
 					{!loading && items.length === 0 && <div className='text-secondary py-6 text-center text-sm'>暂无文章</div>}
 					{loading && <div className='text-secondary py-6 text-center text-sm'>加载中...</div>}
 				</>

@@ -1,0 +1,7 @@
+{
+    "title": "传统编译器和深度学习编译器的调研和理解",
+    "tags": ["compiler","deep-learning-compiler","tvm","llvm"],
+    "date": "2022-05-01",
+    "summary": "本文介绍传统编译器框架和深度学习编译器框架，通过两者对比说明了我对编译器的简单理解",
+    "cover": ""
+}

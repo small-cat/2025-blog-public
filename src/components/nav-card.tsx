@@ -37,30 +37,34 @@ const list = [
 		label: '近期文章',
 		href: '/blog'
 	},
-	{
+	/*{
 		icon: ProjectsOutlineSVG,
 		iconActive: ProjectsFilledSVG,
 		label: '我的项目',
 		href: '/projects'
-	},
-	{
-		icon: AboutOutlineSVG,
-		iconActive: AboutFilledSVG,
-		label: '关于网站',
-		href: '/about'
-	},
-	{
-		icon: ShareOutlineSVG,
-		iconActive: ShareFilledSVG,
-		label: '推荐分享',
-		href: '/share'
-	},
+	}, */	
+
+	// 分享看到的优秀的文章
 	{
 		icon: WebsiteOutlineSVG,
 		iconActive: WebsiteFilledSVG,
 		label: '优秀博客',
 		href: '/bloggers'
-	}
+	},
+
+	// 分享看到的优秀的项目，可以在 blog 里面写分享，然后在这里加上一个卡片，方便查询
+	{
+		icon: ShareOutlineSVG,
+		iconActive: ShareFilledSVG,
+		label: '好玩的项目',
+		href: '/share'
+	},	
+	{
+		icon: AboutOutlineSVG,
+		iconActive: AboutFilledSVG,
+		label: '个人简介',
+		href: '/about'
+	},
 ]
 
 const extraSize = 8

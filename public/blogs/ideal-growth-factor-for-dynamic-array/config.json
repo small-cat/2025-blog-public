@@ -1,0 +1,7 @@
+{
+    "title": "动态数组的内存增长因子如何选择-1.5倍还是2倍",
+    "tags": ["代码风格","约束"],
+    "date": "2017-08-23",
+    "summary": "What is the ideal growth rate for a dynamically allocated array?",
+    "cover": ""
+}

@@ -1,0 +1,7 @@
+{
+    "title": "scrapy - Request函数中回调函数未被调用的问题",
+    "tags": ["scrapy","callback"],
+    "date": "2017-07-19",
+    "summary": "本文主要是讲述在 scrapy 爬虫时，发现 Request 函数中的回调函数没有被调用的解决办法",
+    "cover": ""
+}

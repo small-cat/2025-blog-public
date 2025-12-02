@@ -1,0 +1,7 @@
+{
+    "title": "redis 主备演练",
+    "tags": ["redis","主备"],
+    "date": "2016-12-15",
+    "summary": "搭建redis主从复制环境",
+    "cover": ""
+}
