@@ -175,15 +175,14 @@
 	transform: scale(0.95);
 }
 
-/* Images */
+/* Images - Adapt to screen width */
 .prose img {
-	max-width: 40%;
+	max-width: 80%; /* Make images full width by default */
+	width: 80%; /* Ensure they take full container width */
 	margin: 1.5em auto;
-	height: auto;
+	height: auto; /* Maintain aspect ratio */
 	border-radius: 12px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-
-	@apply max-sm:max-w-full;
 }
 
 /* Blockquote */
