@@ -1,0 +1,63 @@
+[
+  {
+    "id": "web-development",
+    "name": "Web Development Fundamentals",
+    "tags": ["React", "Next.js", "TailwindCSS"],
+    "summary": "A comprehensive guide to modern web development techniques and best practices.",
+    "catalogue": [
+      {
+        "id": "intro-react",
+        "title": "Introduction to React",
+        "url": "/blog/intro-react"
+      },
+      {
+        "id": "nextjs-basics",
+        "title": "Next.js Basics",
+        "url": "/blog/nextjs-basics"
+      },
+      {
+        "id": "tailwindcss-guide",
+        "title": "TailwindCSS Guide",
+        "url": "/blog/tailwindcss-guide"
+      },
+      {
+        "id": "react-advanced",
+        "title": "Advanced React Patterns",
+        "url": "/blog/react-advanced"
+      }
+    ]
+  },
+  {
+    "id": "javascript-mastery",
+    "name": "JavaScript Mastery",
+    "tags": ["JavaScript", "ES6+", "TypeScript"],
+    "summary": "Deep dive into JavaScript concepts and TypeScript integration.",
+    "catalogue": [
+      {
+        "id": "js-functions",
+        "title": "Functions and Closures",
+        "url": "/blog/js-functions"
+      },
+      {
+        "id": "js-async",
+        "title": "Async Programming",
+        "url": "/blog/js-async"
+      },
+      {
+        "id": "typescript-basics",
+        "title": "TypeScript Basics",
+        "url": "/blog/typescript-basics"
+      },
+      {
+        "id": "typescript-advanced",
+        "title": "Advanced TypeScript",
+        "url": "/blog/typescript-advanced"
+      },
+      {
+        "id": "js-design-patterns",
+        "title": "Design Patterns",
+        "url": "/blog/js-design-patterns"
+      }
+    ]
+  }
+]
