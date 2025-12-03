@@ -63,7 +63,7 @@ export function ColumnCard({ column }: ColumnCardProps) {
         </div>
 
         {/* Summary */}
-        <p className='text-secondary text-sm leading-relaxed'>
+        <p className='mt-4 text-secondary text-sm leading-relaxed'>
           {column.summary}
         </p>
 

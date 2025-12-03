@@ -1,62 +1,29 @@
 [
   {
-    "id": "web-development",
-    "name": "Web Development Fundamentals",
-    "tags": ["React", "Next.js", "TailwindCSS"],
-    "summary": "A comprehensive guide to modern web development techniques and best practices.",
+    "id": "yocto-cookbook",
+    "name": "Yocto Cookbook",
+    "tags": ["building", "programming compiling", "linux"],
+    "summary": "Yocto 是一个基于 Linux 的开源项目，用于构建自定义的 Linux 发行版。本专栏详细介绍了 yocto 的使用方式，介绍了 yocto 中的一些核心概念，以及如何使用 yocto 构建自定义的 Linux 发行版。",
     "catalogue": [
       {
-        "id": "intro-react",
-        "title": "Introduction to React",
-        "url": "/blog/intro-react"
+        "id": "yocto-intro",
+        "title": "构建工具是什么，yocto 是什么",
+        "url": "/columns/yocto-cookbook/yocto-intro"
       },
       {
-        "id": "nextjs-basics",
-        "title": "Next.js Basics",
-        "url": "/blog/nextjs-basics"
+        "id": "yocto-usage",
+        "title": "Yocto 的基本上使用方式",
+        "url": "/columns/yocto-cookbook/how-to-create-a-recipe"
       },
       {
-        "id": "tailwindcss-guide",
-        "title": "TailwindCSS Guide",
-        "url": "/blog/tailwindcss-guide"
+        "id": "workflow-of-yocto",
+        "title": "Yocto 的结构和流程分析",
+        "url": "/columns/yocto-cookbook/workflow-of-yocto"
       },
       {
-        "id": "react-advanced",
-        "title": "Advanced React Patterns",
-        "url": "/blog/react-advanced"
-      }
-    ]
-  },
-  {
-    "id": "javascript-mastery",
-    "name": "JavaScript Mastery",
-    "tags": ["JavaScript", "ES6+", "TypeScript"],
-    "summary": "Deep dive into JavaScript concepts and TypeScript integration.",
-    "catalogue": [
-      {
-        "id": "js-functions",
-        "title": "Functions and Closures",
-        "url": "/blog/js-functions"
-      },
-      {
-        "id": "js-async",
-        "title": "Async Programming",
-        "url": "/blog/js-async"
-      },
-      {
-        "id": "typescript-basics",
-        "title": "TypeScript Basics",
-        "url": "/blog/typescript-basics"
-      },
-      {
-        "id": "typescript-advanced",
-        "title": "Advanced TypeScript",
-        "url": "/blog/typescript-advanced"
-      },
-      {
-        "id": "js-design-patterns",
-        "title": "Design Patterns",
-        "url": "/blog/js-design-patterns"
+        "id": "create-image-with-yocto",
+        "title": "如何使用 Yocto 构建自定义的 Linux 发行版",
+        "url": "/columns/yocto-cookbook/create-image-with-yocto"
       }
     ]
   }

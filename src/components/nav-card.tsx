@@ -43,7 +43,7 @@ const list = [
 		icon: ProjectsOutlineSVG,
 		iconActive: ProjectsFilledSVG,
 		label: '我的专栏',
-		href: '/projects'
+		href: '/columns'
 	},
 
 	// 分享看到的优秀的文章
