@@ -50,7 +50,7 @@ const list = [
 	{
 		icon: WebsiteOutlineSVG,
 		iconActive: WebsiteFilledSVG,
-		label: '优秀博客',
+		label: '优秀文章集',
 		href: '/bloggers'
 	},
 
