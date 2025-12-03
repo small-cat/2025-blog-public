@@ -1,0 +1,11 @@
+{
+  "title": "yocto 中 cmake 和 autoconf 接口的实现",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-08",
+  "summary": "yocto 中 cmake 和 autoconf 接口的实现",
+  "cover": ""
+}

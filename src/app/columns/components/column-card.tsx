@@ -3,6 +3,7 @@
 import { motion } from 'motion/react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { useSize } from '@/hooks/use-size'
 
 export interface ColumnBlog {
   id: string
@@ -23,11 +24,12 @@ interface ColumnCardProps {
 export function ColumnCard({ column }: ColumnCardProps) {
   const showCatalogue = column.catalogue.slice(0, 3)
   const hasMore = column.catalogue.length > 3
+  const { maxSM } = useSize()
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      {...(maxSM ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
       className='card relative flex flex-col gap-4 group'>
       <Link
         href={`/columns/${column.id}`}

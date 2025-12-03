@@ -1,0 +1,11 @@
+{
+  "title": "如何使用 yocto 构建一个自己的 image",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-04",
+  "summary": "如何使用 yocto 构建一个自己的 image",
+  "cover": ""
+}

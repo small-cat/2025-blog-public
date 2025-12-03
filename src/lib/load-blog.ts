@@ -47,3 +47,34 @@ export async function loadBlog(slug: string): Promise<LoadedBlog> {
 		cover: config.cover
 	}
 }
+
+export async function loadColumn(column_id: string, slug: string): Promise<LoadedBlog> {
+	if (!slug) {
+		throw new Error('Slug is required')
+	}
+
+	// Load config.json
+	let config: BlogConfig = {}
+	const configRes = await fetch(`/columns/${encodeURIComponent(column_id)}/${encodeURIComponent(slug)}/config.json`)
+	if (configRes.ok) {
+		try {
+			config = await configRes.json()
+		} catch {
+			config = {}
+		}
+	}
+
+	// Load index.md
+	const mdRes = await fetch(`/columns/${encodeURIComponent(column_id)}/${encodeURIComponent(slug)}/index.md`)
+	if (!mdRes.ok) {
+		throw new Error('Blog not found')
+	}
+	const markdown = await mdRes.text()
+
+	return {
+		slug,
+		config,
+		markdown,
+		cover: config.cover
+	}
+}

@@ -1,0 +1,11 @@
+{
+  "title": "yocto中如何支持 SBOM",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-12",
+  "summary": "yocto中如何支持 SBOM",
+  "cover": ""
+}

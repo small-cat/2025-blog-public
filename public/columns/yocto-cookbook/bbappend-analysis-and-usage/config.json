@@ -1,0 +1,11 @@
+{
+  "title": "bbappend 机制分析和使用",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-06",
+  "summary": "bbappend 机制分析和使用",
+  "cover": ""
+}

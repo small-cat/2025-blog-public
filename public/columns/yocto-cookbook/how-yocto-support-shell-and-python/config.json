@@ -1,0 +1,11 @@
+{
+  "title": "recipe 中同时支持 shell 和 python 的实现原理",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-17",
+  "summary": "recipe 中同时支持 shell 和 python 的实现原理",
+  "cover": ""
+}

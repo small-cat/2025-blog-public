@@ -1,0 +1,11 @@
+{
+  "title": "yocto 中环境变量的处理方式",
+  "tags": [
+    "linux",
+    "compiling",
+    "builder"
+  ],
+  "date": "2024-02-16",
+  "summary": "yocto 中环境变量的处理方式",
+  "cover": ""
+}

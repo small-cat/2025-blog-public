@@ -1,0 +1,212 @@
+[
+  {
+    "title": "构建工具是什么, yocto 又是什么",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-01",
+    "summary": "构建工具是什么, yocto 又是什么",
+    "cover": "",
+    "slug": "what-is-yocto"
+  }, {
+    "title": "yocto 的使用",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-02",
+    "summary": "yocto 的使用",
+    "cover": "",
+    "slug": "how-to-create-a-recipe"
+  }, {
+    "title": "yocto 的结构和流程分析",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-03",
+    "summary": "yocto 的结构和流程分析",
+    "cover": "",
+    "slug": "work-flow-of-yocto"
+  }, {
+    "title": "如何使用 yocto 构建一个自己的 image",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-04",
+    "summary": "如何使用 yocto 构建一个自己的 image",
+    "cover": "",
+    "slug": "how-to-create-your-own-image"
+  }, {
+    "title": "如何使用外部工具链编译",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-05",
+    "summary": "如何使用外部工具链编译",
+    "cover": "",
+    "slug": "how-to-use-external-toolchain"
+  }, {
+    "title": "bbappend 机制分析和使用",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-06",
+    "summary": "bbappend 机制分析和使用",
+    "cover": "",
+    "slug": "bbappend-analysis-and-usage"
+  }, {
+    "title": "答疑篇：常见问题和分析汇总(一)",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-07",
+    "summary": "答疑篇：常见问题和分析汇总(一)",
+    "cover": "",
+    "slug": "question-and-answer-1"
+  }, {
+    "title": "yocto 中 cmake 和 autoconf 接口的实现",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-08",
+    "summary": "yocto 中 cmake 和 autoconf 接口的实现",
+    "cover": "",
+    "slug": "yocto-interface-for-cmake-and-autoconf"
+  }, {
+    "title": "怎么在同一个 layer 中实现对多种工具链的支持",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-9",
+    "summary": "怎么在同一个 layer 中实现对多种工具链的支持",
+    "cover": "",
+    "slug": "support-multi-toolchains-in-same-layer"
+  }, {
+    "title": "如何使用外部 rootfs",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-10",
+    "summary": "如何使用外部 rootfs",
+    "cover": "",
+    "slug": "prebuilt-binaries-and-external-rootfs"
+  }, {
+    "title": "如何在 layer 中添加一个python module",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-11",
+    "summary": "如何在 layer 中添加一个python module",
+    "cover": "",
+    "slug": "add-a-python-module-for-layer"
+  }, {
+    "title": "yocto中如何支持 SBOM",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-12",
+    "summary": "yocto中如何支持 SBOM",
+    "cover": "",
+    "slug": "how-to-generate-sbom-list"
+  }, {
+    "title": "排查配方问题的几点思路",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-13",
+    "summary": "排查配方问题的几点思路",
+    "cover": "",
+    "slug": "how-to-check-the-problem-in-recipe"
+  }, {
+    "title": "加速构建过程的几种常用手段",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-14",
+    "summary": "加速构建过程的几种常用手段",
+    "cover": "",
+    "slug": "how-to-speed-up-compiling-process"
+  }, {
+    "title": "答疑篇: 常见问题和分析汇总(二)",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-15",
+    "summary": "答疑篇: 常见问题和分析汇总(二)",
+    "cover": "",
+    "slug": "question-and-answer-2"
+  }, {
+    "title": "yocto 中环境变量的处理方式",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-16",
+    "summary": "yocto 中环境变量的处理方式",
+    "cover": "",
+    "slug": "how-yocto-deal-with-environment-variables"
+  }, {
+    "title": "recipe 中同时支持 shell 和 python 的实现原理",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-17",
+    "summary": "recipe 中同时支持 shell 和 python 的实现原理",
+    "cover": "",
+    "slug": "how-yocto-support-shell-and-python"
+  }, {
+    "title": "do_patch 实现浅析",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-18",
+    "summary": "do_patch 实现浅析",
+    "cover": "",
+    "slug": "something-about-do-patch"
+  }, {
+    "title": "关于 do_install 的那些事",
+    "tags": [
+      "linux",
+      "compiling",
+      "builder"
+    ],
+    "date": "2024-02-19",
+    "summary": "关于 do_install 的那些事",
+    "cover": "",
+    "slug": "something-about-do-install"
+  }
+]
