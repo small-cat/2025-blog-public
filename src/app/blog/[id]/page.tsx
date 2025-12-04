@@ -49,10 +49,6 @@ export default function Page() {
 	const date = useMemo(() => dayjs(blog?.config.date).format('YYYY年 M月 D日'), [blog?.config.date])
 	const tags = blog?.config.tags || []
 
-	const handleEdit = () => {
-		router.push(`/write/${slug}`)
-	}
-
 	if (!slug) {
 		return <div className='text-secondary flex h-full items-center justify-center text-sm'>无效的链接</div>
 	}
