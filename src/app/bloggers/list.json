@@ -1,5 +1,19 @@
 [
 	{
+		"name": "Chunked-Prefills 分块预填充机制详解",
+		"avatar": "/images/infoq.png",
+		"url": "https://xie.infoq.cn/article/4101c311bcd3c16fcf8edad23",
+		"description": "对 chunked prefills 机制的详细解释。文章从 batching 的演进的角度，介绍了 static batch，continuous batch，以及 chunked batch，图文并茂的说明了每一个 batch 的思路，以及它们的优缺点。文中提到了 vllm 中的 batch 的实现的缺点，这个时间点可能有点早，vllm 现在已经有了类似的方案，也实现了 chunked prefill 的机制。",
+		"stars": 4
+	},
+	{
+		"name": "Building an Open ABI and FFI for ML Systems",
+		"avatar": "https://tvm.apache.org/assets/images/logo.svg",
+		"url": "https://tvm.apache.org/2025/10/21/tvm-ffi",
+		"description": "TVM 社区推出的 TVM FFI，针对机器学习系统的一个开放的ABI和FFI标准。\n它的主要设计理念如下：基于DLPack标准的Tensor储存格式，这使得我们可以在各个框架之间进行无拷贝GPU数据传递和转换；灵活的参数传递和调用规范，使得我们可以传递各种机器学习中出现的数据类型；稳定的C ABI，成为不同的编译器和框架之间的桥梁全面针对Python/PyTorch的优化支持，但是维持最小的依赖，并且提供灵活的跨云端部署的可能性",
+		"stars": 3
+	},
+	{
 		"name": "阮一峰的网络日志",
 		"avatar": "/images/blogger/fe25259da8e3609b.png",
 		"url": "https://www.ruanyifeng.com/blog/archives.html",
@@ -33,12 +47,5 @@
 		"url": "https://www.elysium-stack.cn/",
 		"description": "UI 设计师 blogger，少见，blog 设计的很棒。一股游戏感铺面而来，25 年开始的内容。",
 		"stars": 3
-	},
-	{
-		"name": "Chunked-Prefills 分块预填充机制详解",
-		"avatar": "https://static001.geekbang.org/static/infoq/www/img/logo.b51e49df.png",
-		"url": "https://xie.infoq.cn/article/4101c311bcd3c16fcf8edad23",
-		"description": "对 chunked prefills 机制的详细解释。文章从 batching 的演进的角度，介绍了 static batch，continuous batch，以及 chunked batch，图文并茂的说明了每一个 batch 的思路，以及它们的优缺点。文中提到了 vllm 中的 batch 的实现的缺点，这个时间点可能有点早，vllm 现在已经有了类似的方案，也实现了 chunked prefill 的机制。",
-		"stars": 4
-	}
+	}	
 ]

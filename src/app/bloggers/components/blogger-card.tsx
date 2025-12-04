@@ -30,14 +30,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 		onUpdate?.(updated, blogger, avatarItem || undefined)
 	}
 
-	const handleAvatarSubmit = (avatar: AvatarItem) => {
-		setAvatarItem(avatar)
-		const avatarUrl = avatar.type === 'url' ? avatar.url : avatar.previewUrl
-		const updated = { ...localBlogger, avatar: avatarUrl }
-		setLocalBlogger(updated)
-		onUpdate?.(updated, blogger, avatar)
-	}
-
 	const handleCancel = () => {
 		setLocalBlogger(blogger)
 		setIsEditing(false)
@@ -51,29 +43,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 			initial={{ opacity: 0, scale: 0.6 }}
 			{...(maxSM ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
 			className='card relative block overflow-hidden'>
-			{isEditMode && (
-				<div className='absolute top-3 right-3 z-10 flex gap-2'>
-					{isEditing ? (
-						<>
-							<button onClick={handleCancel} className='rounded-lg px-2 py-1.5 text-xs text-gray-400 transition-colors hover:text-gray-600'>
-								取消
-							</button>
-							<button onClick={() => setIsEditing(false)} className='rounded-lg px-2 py-1.5 text-xs text-blue-400 transition-colors hover:text-blue-600'>
-								完成
-							</button>
-						</>
-					) : (
-						<>
-							<button onClick={() => setIsEditing(true)} className='rounded-lg px-2 py-1.5 text-xs text-blue-400 transition-colors hover:text-blue-600'>
-								编辑
-							</button>
-							<button onClick={onDelete} className='rounded-lg px-2 py-1.5 text-xs text-red-400 transition-colors hover:text-red-600'>
-								删除
-							</button>
-						</>
-					)}
-				</div>
-			)}
 
 			<div>
 				<div className='mb-4 flex items-center gap-4'>
@@ -84,11 +53,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 							className={cn('h-16 w-16 rounded-full object-cover', canEdit && 'cursor-pointer')}
 							onClick={() => canEdit && setShowAvatarDialog(true)}
 						/>
-						{canEdit && (
-							<div className='ev pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100'>
-								<span className='text-xs text-white'>更换</span>
-							</div>
-						)}
 					</div>
 					<div className='flex-1'>
 						<h3
@@ -98,15 +62,7 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 							className={cn('group-hover:text-brand text-lg font-bold transition-colors focus:outline-none', canEdit && 'cursor-text')}>
 							{localBlogger.name}
 						</h3>
-						{canEdit ? (
-							<div
-								contentEditable
-								suppressContentEditableWarning
-								onBlur={e => handleFieldChange('url', e.currentTarget.textContent || '')}
-								className='text-secondary mt-1 block max-w-[200px] cursor-text truncate text-xs focus:outline-none'>
-								{localBlogger.url}
-							</div>
-						) : (
+						{(
 							<a
 								href={localBlogger.url}
 								target='_blank'
@@ -118,9 +74,7 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 					</div>
 				</div>
 
-				{canEdit ? (
-					<EditableStarRating stars={localBlogger.stars} editable={true} onChange={stars => handleFieldChange('stars', stars)} />
-				) : (
+				{(
 					<StarRating stars={localBlogger.stars} />
 				)}
 
@@ -143,9 +97,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 				</p>
 			</div>
 
-			{canEdit && showAvatarDialog && (
-				<AvatarUploadDialog currentAvatar={localBlogger.avatar} onClose={() => setShowAvatarDialog(false)} onSubmit={handleAvatarSubmit} />
-			)}
 		</motion.div>
 	)
 }
