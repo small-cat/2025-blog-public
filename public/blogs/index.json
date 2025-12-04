@@ -1,5 +1,204 @@
 [
   {
+    "title": "transformer-intro",
+    "tags": [
+      "机器学习",
+      "深度学习",
+      "Transformer"
+    ],
+    "date": "2024-02-09",
+    "summary": "介绍Transformer模型的基本原理和结构。",
+    "cover": "",
+    "slug": "transformer-intro"
+  },
+  {
+    "title": "Demand-Driven Alias Analysis for C",
+    "tags": [
+      "C语言",
+      "编译器",
+      "静态分析"
+    ],
+    "date": "2024-11-25",
+    "summary": "介绍C语言中需求驱动的别名分析方法。",
+    "cover": "",
+    "slug": "demand-driven-alias-analysis-for-c"
+  },
+  {
+    "title": "mdbook-墙裂推荐",
+    "tags": [
+      "工具",
+      "文档",
+      "推荐"
+    ],
+    "date": "2024-11-04",
+    "summary": "强烈推荐mdbook这款文档生成工具。",
+    "cover": "",
+    "slug": "mdbook-strongly-recommend"
+  },
+  {
+    "title": "c或c++中两个同名变量一定会造成 redefine 吗",
+    "tags": [
+      "C语言",
+      "C++",
+      "编程",
+      "编译器"
+    ],
+    "date": "2024-03-08",
+    "summary": "探讨C/C++中同名变量是否必然导致重定义错误。",
+    "cover": "",
+    "slug": "same-variable-conflict-in-c-or-cpp"
+  },
+  {
+    "title": "2024开工前的感想",
+    "tags": [
+      "个人",
+      "感想",
+      "工作"
+    ],
+    "date": "2024-02-22",
+    "summary": "分享2024年开工前的一些个人感想和展望。",
+    "cover": "",
+    "slug": "2024-before-work-thoughts"
+  },
+  {
+    "title": "你所不知道的关于库函数和系统调用的事",
+    "tags": [
+      "编程",
+      "操作系统",
+      "系统调用",
+      "库函数"
+    ],
+    "date": "2024-05-19",
+    "summary": "揭示库函数和系统调用之间的一些鲜为人知的事实。",
+    "cover": "",
+    "slug": "something-about-library-functions-and-system-calls"
+  },
+  {
+    "title": "cuda二进制文件中到底有些什么",
+    "tags": [
+      "CUDA",
+      "GPU",
+      "编程",
+      "二进制"
+    ],
+    "date": "2024-06-08",
+    "summary": "探索CUDA二进制文件的内部结构和内容。",
+    "cover": "",
+    "slug": "whats-inside-cuda-binary-files"
+  },
+  {
+    "title": "如何理解C中的数组名",
+    "tags": [
+      "C语言",
+      "数组",
+      "编程"
+    ],
+    "date": "2024-04-11",
+    "summary": "解释C语言中数组名的含义和用法。",
+    "cover": "",
+    "slug": "how-to-understand-array-names-in-c"
+  },
+  {
+    "title": "单步跟踪调试c++模版你会吗",
+    "tags": [
+      "C++",
+      "模板",
+      "调试"
+    ],
+    "date": "2024-07-24",
+    "summary": "介绍如何单步跟踪调试C++模板代码。",
+    "cover": "",
+    "slug": "debug-cpp-templates"
+  },
+  {
+    "title": "自我成长的方法",
+    "tags": [
+      "个人成长",
+      "自我提升",
+      "方法"
+    ],
+    "date": "2024-02-10",
+    "summary": "分享一些促进自我成长的有效方法。",
+    "cover": "",
+    "slug": "methods-for-self-growth"
+  },
+  {
+    "title": "在 C++ 中，静态数组与指针之间有什么关系",
+    "tags": [
+      "C++",
+      "数组",
+      "指针",
+      "编程"
+    ],
+    "date": "2024-01-22",
+    "summary": "探讨C++中静态数组与指针之间的关联和区别。",
+    "cover": "",
+    "slug": "static-arrays-and-pointers-in-cpp"
+  },
+  {
+    "title": "tvm tune with rpc",
+    "tags": [
+      "TVM",
+      "深度学习",
+      "编译器",
+      "RPC"
+    ],
+    "date": "2024-08-13",
+    "summary": "介绍如何使用RPC进行TVM模型的调优。",
+    "cover": "",
+    "slug": "tvm-tune-with-rpc"
+  },
+  {
+    "title": "系统调用的实现",
+    "tags": [
+      "操作系统",
+      "系统调用",
+      "实现"
+    ],
+    "date": "2024-05-20",
+    "summary": "深入解析系统调用的底层实现机制。",
+    "cover": "",
+    "slug": "implementation-of-system-calls"
+  },
+  {
+    "title": "认知升级",
+    "tags": [
+      "认知",
+      "个人成长",
+      "心理学"
+    ],
+    "date": "2024-10-08",
+    "summary": "探讨如何提升认知能力和思维方式。",
+    "cover": "",
+    "slug": "cognitive-upgrade"
+  },
+  {
+    "title": "tvm中python bindings是如何与c++代码交互的",
+    "tags": [
+      "TVM",
+      "Python",
+      "C++",
+      "绑定",
+      "交互"
+    ],
+    "date": "2024-01-03",
+    "summary": "解析TVM中Python绑定与C++代码的交互方式。",
+    "cover": "",
+    "slug": "python-bindings-in-tvm"
+  },
+  {
+    "title": "shell技巧",
+    "tags": [
+      "Shell",
+      "命令行",
+      "技巧"
+    ],
+    "date": "2024-03-12",
+    "summary": "分享一些实用的Shell命令行技巧。",
+    "cover": "",
+    "slug": "shell-tips"
+  },
+  {
     "title": "搭建本地git服务器",
     "tags": [
       "git",

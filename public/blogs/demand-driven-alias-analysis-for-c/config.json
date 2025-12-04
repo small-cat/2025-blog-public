@@ -1,0 +1,11 @@
+{
+  "title": "Demand-Driven Alias Analysis for C",
+  "tags": [
+    "C语言",
+    "编译器",
+    "静态分析"
+  ],
+  "date": "2024-11-25",
+  "summary": "介绍C语言中需求驱动的别名分析方法。",
+  "cover": ""
+}
