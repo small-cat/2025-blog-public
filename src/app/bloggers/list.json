@@ -1,7 +1,7 @@
 [
 	{
 		"name": "Chunked-Prefills 分块预填充机制详解",
-		"avatar": "/images/infoq.png",
+		"avatar": "/images/InfoQ.png",
 		"url": "https://xie.infoq.cn/article/4101c311bcd3c16fcf8edad23",
 		"description": "对 chunked prefills 机制的详细解释。文章从 batching 的演进的角度，介绍了 static batch，continuous batch，以及 chunked batch，图文并茂的说明了每一个 batch 的思路，以及它们的优缺点。文中提到了 vllm 中的 batch 的实现的缺点，这个时间点可能有点早，vllm 现在已经有了类似的方案，也实现了 chunked prefill 的机制。",
 		"stars": 4

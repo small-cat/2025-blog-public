@@ -137,4 +137,4 @@ functions:
    
 
 ## 个人评价
-喜欢计算机科学与技术，希望能够在基础软件领域持续深耕。喜欢研究编译器技术，研究 llvm，阅读linux内核源代码，开设博客(blog.csdn.net/honglicu123, blog.wuzhenyu.com.cn)，与大家分享自己的学习心得和实践经验，希望能够与更多志同道合的朋友一起探讨，共同进步。
+喜欢计算机科学与技术，希望能够在基础软件领域持续深耕。喜欢研究编译器技术，研究 llvm，阅读linux内核源代码，开设博客(blog.csdn.net/honglicu123, https://eugenewu-blog-public.vercel.app/)，与大家分享自己的学习心得和实践经验，希望能够与更多志同道合的朋友一起探讨，共同进步。
