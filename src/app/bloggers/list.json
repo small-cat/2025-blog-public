@@ -47,26 +47,5 @@
 		"avatar": "https://www.nan.fyi/favicon.ico",
 		"description": "设计大师，nanda 。页面只用灰色加线条，都让我觉得叹为观止，内容不多，每篇都精雕细琢。跟 Josh 一样，属于技术网站，但它的教程引导更加出神入化，可称为程序艺术家。",
 		"stars": 5
-	},
-	{
-		"name": "Emil Kowalski",
-		"url": "https://emilkowal.ski/",
-		"avatar": "https://emilkowal.ski/favicon.ico",
-		"description": "Blog 就干脆\"不设计\"，无装饰。技术就比较轻松一些，它更强调动画/交互。Vercel 员工，他的组件很好用，也很 vercel。",
-		"stars": 4
-	},
-	{
-		"name": "BlogFinder",
-		"url": "https://bf.zzxworld.com/",
-		"avatar": "https://bf.zzxworld.com/images/favicon.png",
-		"description": "一个 blog 收集网站，可以查阅有哪些 blog，也可以直接看最近谁更新了什么",
-		"stars": 3
-	},
-	{
-		"name": "ElysiumStack",
-		"avatar": "https://www.elysium-stack.cn/upload/b4136969-e1a1-44b9-833f-36e54392f018.png",
-		"url": "https://www.elysium-stack.cn/",
-		"description": "UI 设计师 blogger，少见，blog 设计的很棒。一股游戏感铺面而来，25 年开始的内容。",
-		"stars": 3
-	}	
+	}
 ]
