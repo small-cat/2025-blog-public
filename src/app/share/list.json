@@ -1,12 +1,32 @@
 [
 	{
+		"name": "100-gdb-tips",
+		"url": "https://github.com/hellogcc/100-gdb-tips.git",
+		"logo": "/images/github.png",
+		"description": "100 个 GDB 调试技巧，帮助你更快、更有效地调试你的代码",
+		"tags": [
+			"book"
+		],
+		"stars": 3
+	},
+	{
+		"name": "LLMBook-zh",
+		"url": "https://github.com/LLMBook-zh/LLMBook-zh.github.io.git",
+		"logo": "/images/github.png",
+		"description": "中文版书籍注重为大模型技术的入门读者提供讲解，力图展现一个整体的大模型技术框架和路线图。本书适用于具有深度学习基础的高年级本科生以及低年级研究生使用，可以作为一本入门级的技术书籍",
+		"tags": [
+			"book"
+		],
+		"stars": 3
+	},
+	{
 		"name": "klavis",
 		"url": "https://github.com/Klavis-AI/klavis",
 		"logo": "/images/github.png",
 		"description": "一个聪明的 MCP（多能力提供者）服务器，专门解决AI代理面对成千上万工具时的选择困难症 (¬_¬)。它不像传统方式那样一股脑展示所有API，而是通过渐进式引导，让AI根据上下文逐层发现所需工具，极大提升了AI代理在复杂任务中的准确率和效率，高效的选择合适的工具",
 		"tags": [
 			"mcp",
-			"function tool",
+			"context manager",
 			"agent",
 			"project"
 		],
@@ -18,7 +38,6 @@
 		"logo": "/images/github.png",
 		"description": "一个用于监控和评估机器学习模型性能的工具库。它提供了丰富的指标和可视化功能，帮助数据科学家和机器学习工程师及时发现模型中的问题和异常情况。Evidently is an open-source Python library to evaluate, test, and monitor ML and LLM systems—from experiments to production",
 		"tags": [
-			"ai",
 			"evaluation",
 			"project"
 		],
@@ -30,10 +49,8 @@
 		"logo": "/images/github.png",
 		"description": "AI智能体如何才能不迷路，在多个应用和数据库之间自如穿梭？Airweave 项目给出了答案，它为AI智能体提供了一个跨平台的记忆中枢，解决了上下文检索的难题 🤔。通过赋予AI统一的上下文理解能力，它让智能体能够执行需要整合多源信息的复杂任务，变得更加聪明和实用",
 		"tags": [
-			"agent",
-			"context manager",
 			"multi-agents",
-			"memory",
+			"context manager",
 			"project"
 		],
 		"stars": 4
@@ -46,7 +63,6 @@
 		"tags": [
 			"agent",
 			"context manager",
-			"inference cost",
 			"project"
 		],
 		"stars": 4
@@ -98,7 +114,6 @@
 		"url": "https://www.igloo.inc/",
 		"description": "abeto 作品，非常酷炫",
 		"tags": [
-			"3D",
 			"website"
 		],
 		"stars": 4
@@ -109,7 +124,6 @@
 		"url": "https://abeto.co/",
 		"description": "无限绽开的花，飘荡的树叶，复古风格化",
 		"tags": [
-			"3D",
 			"website"
 		],
 		"stars": 4
@@ -120,7 +134,6 @@
 		"url": "https://messenger.abeto.co/",
 		"description": "abeto 作品，卡通送信员在地球小镇上奔跑，联机在线，可换装",
 		"tags": [
-			"3D",
 			"website"
 		],
 		"stars": 4
@@ -131,7 +144,6 @@
 		"url": "https://summer-afternoon.vlucendo.com/",
 		"description": "夏日午后，小男孩在乡村公路上上游玩",
 		"tags": [
-			"3D",
 			"website"
 		],
 		"stars": 4
@@ -142,7 +154,6 @@
 		"url": "https://themonolithproject.net/",
 		"description": "奇幻宇宙的动画演绎，像看电影一样。“跨越多星之际，一座沉默的巨石碑悄然苏醒。“巨石碑计划”：每一次触碰，皆可重写现实。”",
 		"tags": [
-			"3D",
 			"website"
 		],
 		"stars": 5
@@ -159,7 +170,7 @@
 	},
 	{
 		"name": "Isocons",
-		"logo": "blob:https://www.yysuni.com/6e6e7339-d34d-40ef-b3e5-1f12ad5f6b1d",
+		"logo": "/images/share/97859f1c57799dd2.png",
 		"url": "https://www.isocons.app/",
 		"description": "3D icons 网站，酷酷的，免费。",
 		"tags": [
