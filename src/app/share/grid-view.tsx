@@ -19,7 +19,7 @@ export default function GridView({ shares, isEditMode = false, onUpdate, onDelet
 	const allTags = Array.from(new Set(shares.flatMap(share => share.tags)))
 
 	const filteredShares = shares.filter(share => {
-		const matchesSearch = share.name.toLowerCase().includes(searchTerm.toLowerCase()) || share.description.toLowerCase().includes(searchTerm.toLowerCase())
+		const matchesSearch = share.name.toLowerCase().includes(searchTerm.toLowerCase()) || share.description.toLowerCase().includes(searchTerm.toLowerCase()) || share.tags.includes(searchTerm)
 		const matchesTag = selectedTag === 'all' || share.tags.includes(selectedTag)
 		return matchesSearch && matchesTag
 	})

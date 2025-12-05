@@ -6,8 +6,9 @@
 		"description": "一个聪明的 MCP（多能力提供者）服务器，专门解决AI代理面对成千上万工具时的选择困难症 (¬_¬)。它不像传统方式那样一股脑展示所有API，而是通过渐进式引导，让AI根据上下文逐层发现所需工具，极大提升了AI代理在复杂任务中的准确率和效率，高效的选择合适的工具",
 		"tags": [
 			"mcp",
-			"function-tool",
-			"agent"
+			"function tool",
+			"agent",
+			"project"
 		],
 		"stars": 4
 	},
@@ -19,8 +20,7 @@
 		"tags": [
 			"ai",
 			"evaluation",
-			"test",
-			"python"
+			"project"
 		],
 		"stars": 4
 	},
@@ -31,9 +31,10 @@
 		"description": "AI智能体如何才能不迷路，在多个应用和数据库之间自如穿梭？Airweave 项目给出了答案，它为AI智能体提供了一个跨平台的记忆中枢，解决了上下文检索的难题 🤔。通过赋予AI统一的上下文理解能力，它让智能体能够执行需要整合多源信息的复杂任务，变得更加聪明和实用",
 		"tags": [
 			"agent",
-			"context-manager",
+			"context manager",
 			"multi-agents",
-			"memory"
+			"memory",
+			"project"
 		],
 		"stars": 4
 	},
@@ -44,9 +45,9 @@
 		"description": "Token-Oriented Object Notation (TOON) – Compact, human-readable, schema-aware JSON for LLM prompts. Spec, benchmarks, TypeScript SDK. TOON 能够大幅度降低 agent 中的 token 消耗，降低成本",
 		"tags": [
 			"agent",
-			"context-manager",
-			"inference-cost",
-			"compact"
+			"context manager",
+			"inference cost",
+			"project"
 		],
 		"stars": 4
 	},
@@ -56,7 +57,7 @@
 		"logo": "/images/share/7e91e93e3cdd586b.svg",
 		"description": "免费图片处理网站，我经常用来压缩图片，压缩效果会比 Tinypng 更好。链式处理功能非常好用。",
 		"tags": [
-			"图片"
+			"website"
 		],
 		"stars": 4
 	},
@@ -66,6 +67,7 @@
 		"logo": "/images/share/7e720f35557fa9de.svg",
 		"description": "图标库，网站整体很干净。独特的是，它有一类像素风格的图标，很有意思。它的 icon 也很多，还有 grass 风格的。",
 		"tags": [
+			"website",
 			"Icons"
 		],
 		"stars": 3
@@ -76,7 +78,7 @@
 		"logo": "https://assets.awwwards.com/assets/images/favicon.svg",
 		"description": "网站评选网站，你总能从这里发现惊艳的网站",
 		"tags": [
-			"网站集"
+			"website"
 		],
 		"stars": 3
 	},
@@ -86,7 +88,7 @@
 		"url": "https://www.404s.design/",
 		"description": "收集 404 设计的网站，无聊的时候可以看下。",
 		"tags": [
-			"网站集"
+			"website"
 		],
 		"stars": 3
 	},
@@ -96,7 +98,8 @@
 		"url": "https://www.igloo.inc/",
 		"description": "abeto 作品，非常酷炫",
 		"tags": [
-			"3D"
+			"3D",
+			"website"
 		],
 		"stars": 4
 	},
@@ -106,7 +109,8 @@
 		"url": "https://abeto.co/",
 		"description": "无限绽开的花，飘荡的树叶，复古风格化",
 		"tags": [
-			"3D"
+			"3D",
+			"website"
 		],
 		"stars": 4
 	},
@@ -116,7 +120,8 @@
 		"url": "https://messenger.abeto.co/",
 		"description": "abeto 作品，卡通送信员在地球小镇上奔跑，联机在线，可换装",
 		"tags": [
-			"3D"
+			"3D",
+			"website"
 		],
 		"stars": 4
 	},
@@ -126,7 +131,8 @@
 		"url": "https://summer-afternoon.vlucendo.com/",
 		"description": "夏日午后，小男孩在乡村公路上上游玩",
 		"tags": [
-			"3D"
+			"3D",
+			"website"
 		],
 		"stars": 4
 	},
@@ -136,7 +142,8 @@
 		"url": "https://themonolithproject.net/",
 		"description": "奇幻宇宙的动画演绎，像看电影一样。“跨越多星之际，一座沉默的巨石碑悄然苏醒。“巨石碑计划”：每一次触碰，皆可重写现实。”",
 		"tags": [
-			"3D"
+			"3D",
+			"website"
 		],
 		"stars": 5
 	},
@@ -146,7 +153,7 @@
 		"url": "https://www.makingsoftware.com/",
 		"description": "面向软件设计和开发人员的参考手册。样式很棒的学习网站。",
 		"tags": [
-			"学习"
+			"website"
 		],
 		"stars": 4
 	},
@@ -156,6 +163,7 @@
 		"url": "https://www.isocons.app/",
 		"description": "3D icons 网站，酷酷的，免费。",
 		"tags": [
+			"website",
 			"Icons"
 		],
 		"stars": 3
