@@ -21,6 +21,20 @@
 		"stars": 3
 	},
 	{
+		"name": "optimize ai agent memory",
+		"avatar": "/images/github.png",
+		"url": "https://github.com/FareedKhan-dev/optimize-ai-agent-memory",
+		"description": "ai agent 中 memory 的优化，介绍了 9 种不同的优化方法，并给出了对应的 examples 实现。",
+		"stars": 3
+	},
+	{
+		"name": "LLM记忆管理经典框架对比分析：MemOS、Mem0与MemU",
+		"avatar": "/images/wechat.png",
+		"url": "https://mp.weixin.qq.com/s/LrX_OAx-8MrGKr2XLBbgEw",
+		"description": "对比分析了 MemOS、Mem0 与 MemU 这三个经典的 LLM 记忆管理框架。文章从功能、性能、可扩展性、可维护性等多个方面进行了对比，帮助读者了解不同框架的优势和适用场景。",
+		"stars": 3
+	},
+	{
 		"name": "阮一峰的网络日志",
 		"avatar": "/images/blogger/fe25259da8e3609b.png",
 		"url": "https://www.ruanyifeng.com/blog/archives.html",
