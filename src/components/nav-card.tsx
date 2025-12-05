@@ -173,6 +173,7 @@ export default function NavCard() {
 								<Link
 									key={item.href}
 									href={item.href}
+									title={item.label}
 									className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'p-0')}
 									onMouseEnter={() => setHoveredIndex(index)}>
 									<div className='flex h-7 w-7 items-center justify-center'>

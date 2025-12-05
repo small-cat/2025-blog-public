@@ -134,7 +134,7 @@ functions:
         Value: 0
 ```
 
-   
-
 ## 个人评价
-喜欢计算机科学与技术，希望能够在基础软件领域持续深耕。喜欢研究编译器技术，研究 llvm，阅读linux内核源代码，开设博客(blog.csdn.net/honglicu123, https://eugenewu-blog-public.vercel.app/)，与大家分享自己的学习心得和实践经验，希望能够与更多志同道合的朋友一起探讨，共同进步。
+喜欢计算机科学与技术，热爱 coding。关注 AI 领域的最新技术，针对 torch inductor 和 triton 适配过后端，也参与过 XLA 编译器适配新后端的工作，同时负责设计和完成了一个基于 langchain/langgraph 框架的智能体项目。
+
+技术发展很快，程序员需要不断学习新的技术，保持对新事物的好奇心，才能在快速变化的技术环境中保持竞争力。
