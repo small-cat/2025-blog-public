@@ -31,20 +31,20 @@ const nextConfig: NextConfig = {
 		return config
 	},
 
-	async redirects() {
-		return [
-			{
-				source: '/zh',
-				destination: '/',
-				permanent: true
-			},
-			{
-				source: '/en',
-				destination: '/',
-				permanent: true
-			}
-		]
-	},
+	// async redirects() {
+	// 	return [
+	// 		{
+	// 			source: '/zh',
+	// 			destination: '/',
+	// 			permanent: true
+	// 		},
+	// 		{
+	// 			source: '/en',
+	// 			destination: '/',
+	// 			permanent: true
+	// 		}
+	// 	]
+	// },
 	output: "export",
 	images: {
 		"unoptimized": true

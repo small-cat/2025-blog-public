@@ -1,0 +1,22 @@
+{
+  "name": "EugeneWu's Blog",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "outputDirectory": "./build",
+  "nodeVersion": "22.11.0",
+ 
+  "redirects": [
+    {
+      "source": "/zh",
+      "destination": "/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/en",
+      "destination": "/",
+      "permanent": true,
+      "statusCode": 301
+    }
+  ]
+}
