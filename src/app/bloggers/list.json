@@ -42,6 +42,13 @@
 		"stars": 3
 	},
 	{
+		"name": "how to write a good CLAUDE.md",
+		"avatar": "images/blogger/article.png",
+		"url": "https://www.humanlayer.dev/blog/writing-a-good-claude-md",
+		"description": "The article gives some advices on how to write a good CLAUDE.md file to instruct claude code more effectively.",
+		"stars": 4
+	},
+	{
 		"name": "阮一峰的网络日志",
 		"avatar": "/images/blogger/fe25259da8e3609b.png",
 		"url": "https://www.ruanyifeng.com/blog/archives.html",
