@@ -1,5 +1,12 @@
 [
 	{
+		"name": "how to keep memory of agent clean",
+		"avatar": "/images/share/camel.png",
+		"url": "https://www.camel-ai.org/blogs/brainwash-your-agent-how-we-keep-the-memory-clean",
+		"description": "你的AI智能体为什么总是犯迷糊或重复犯错？@CamelAIOrg 团队一针见血地指出，问题不在于AI遗忘，而在于糟糕的 上下文工程，并分享了给智能体洗脑保持记忆清洁的秘诀 🧼。他们介绍了 上下文总结、工作流内存 等实用技术，帮助AI剪除无关信息、从过往经验中学习，就像给一个杂乱的脑袋建立了一套高效的笔记系统。",
+		"stars": 4
+	},
+	{
 		"name": "LLMSYS Org",
 		"avatar": "/images/llmsys2.png",
 		"url": "https://lmsys.org/",
