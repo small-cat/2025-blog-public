@@ -24,4 +24,3 @@ export const useConfigStore = create<ConfigStore>((set, get) => ({
 		set(state => ({ regenerateKey: state.regenerateKey + 1 }))
 	}
 }))
-

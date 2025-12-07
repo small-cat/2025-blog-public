@@ -83,4 +83,3 @@ export async function pushShares(params: PushSharesParams): Promise<void> {
 
 	toast.success('发布成功！')
 }
-

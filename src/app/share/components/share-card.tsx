@@ -181,4 +181,3 @@ export function ShareCard({ share, isEditMode = false, onUpdate, onDelete }: Sha
 		</motion.div>
 	)
 }
-

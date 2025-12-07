@@ -36,4 +36,3 @@ function StarIcon({ filled }: { filled: boolean }) {
 		</svg>
 	)
 }
-

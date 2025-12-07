@@ -64,7 +64,7 @@ export default function SocialButtons() {
 							animate={{ opacity: 1, scale: 1 }}
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
-							className='card relative flex items-center gap-2 rounded-xl px-3 py-2.5 font-medium text-xl text-white bg-[#FF0000]'>
+							className='card relative flex items-center gap-2 rounded-xl bg-[#FF0000] px-3 py-2.5 text-xl font-medium text-white'>
 							CSDN
 						</motion.a>
 					)}

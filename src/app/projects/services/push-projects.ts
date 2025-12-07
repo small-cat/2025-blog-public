@@ -76,4 +76,3 @@ export async function pushProjects(params: PushProjectsParams): Promise<void> {
 
 	toast.success('发布成功！')
 }
-

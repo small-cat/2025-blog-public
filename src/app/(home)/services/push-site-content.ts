@@ -66,4 +66,3 @@ export async function pushSiteContent(siteContent: SiteContent, faviconItem?: Fi
 
 	toast.success('保存成功！')
 }
-

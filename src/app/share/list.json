@@ -4,9 +4,7 @@
 		"url": "https://github.com/hellogcc/100-gdb-tips.git",
 		"logo": "/images/github.png",
 		"description": "100 个 GDB 调试技巧，帮助你更快、更有效地调试你的代码",
-		"tags": [
-			"book"
-		],
+		"tags": ["book"],
 		"stars": 3
 	},
 	{
@@ -14,9 +12,7 @@
 		"url": "https://github.com/LLMBook-zh/LLMBook-zh.github.io.git",
 		"logo": "/images/github.png",
 		"description": "中文版书籍注重为大模型技术的入门读者提供讲解，力图展现一个整体的大模型技术框架和路线图。本书适用于具有深度学习基础的高年级本科生以及低年级研究生使用，可以作为一本入门级的技术书籍",
-		"tags": [
-			"book"
-		],
+		"tags": ["book"],
 		"stars": 3
 	},
 	{
@@ -24,12 +20,7 @@
 		"url": "https://github.com/Klavis-AI/klavis",
 		"logo": "/images/github.png",
 		"description": "一个聪明的 MCP（多能力提供者）服务器，专门解决AI代理面对成千上万工具时的选择困难症 (¬_¬)。它不像传统方式那样一股脑展示所有API，而是通过渐进式引导，让AI根据上下文逐层发现所需工具，极大提升了AI代理在复杂任务中的准确率和效率，高效的选择合适的工具",
-		"tags": [
-			"mcp",
-			"context manager",
-			"agent",
-			"project"
-		],
+		"tags": ["mcp", "context manager", "agent", "project"],
 		"stars": 4
 	},
 	{
@@ -37,10 +28,7 @@
 		"url": "https://github.com/evidentlyai/evidently",
 		"logo": "/images/github.png",
 		"description": "一个用于监控和评估机器学习模型性能的工具库。它提供了丰富的指标和可视化功能，帮助数据科学家和机器学习工程师及时发现模型中的问题和异常情况。Evidently is an open-source Python library to evaluate, test, and monitor ML and LLM systems—from experiments to production",
-		"tags": [
-			"evaluation",
-			"project"
-		],
+		"tags": ["evaluation", "project"],
 		"stars": 4
 	},
 	{
@@ -48,11 +36,7 @@
 		"url": "https://github.com/airweave-ai/airweave",
 		"logo": "/images/github.png",
 		"description": "AI智能体如何才能不迷路，在多个应用和数据库之间自如穿梭？Airweave 项目给出了答案，它为AI智能体提供了一个跨平台的记忆中枢，解决了上下文检索的难题 🤔。通过赋予AI统一的上下文理解能力，它让智能体能够执行需要整合多源信息的复杂任务，变得更加聪明和实用",
-		"tags": [
-			"multi-agents",
-			"context manager",
-			"project"
-		],
+		"tags": ["multi-agents", "context manager", "project"],
 		"stars": 4
 	},
 	{
@@ -60,11 +44,7 @@
 		"url": "https://github.com/toon-format/toon",
 		"logo": "/images/github.png",
 		"description": "Token-Oriented Object Notation (TOON) – Compact, human-readable, schema-aware JSON for LLM prompts. Spec, benchmarks, TypeScript SDK. TOON 能够大幅度降低 agent 中的 token 消耗，降低成本",
-		"tags": [
-			"agent",
-			"context manager",
-			"project"
-		],
+		"tags": ["agent", "context manager", "project"],
 		"stars": 4
 	},
 	{
@@ -72,9 +52,7 @@
 		"url": "https://www.iloveimg.com/zh-cn",
 		"logo": "/images/share/7e91e93e3cdd586b.svg",
 		"description": "免费图片处理网站，我经常用来压缩图片，压缩效果会比 Tinypng 更好。链式处理功能非常好用。",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -82,10 +60,7 @@
 		"url": "https://nucleoapp.com/app/?library=core",
 		"logo": "/images/share/7e720f35557fa9de.svg",
 		"description": "图标库，网站整体很干净。独特的是，它有一类像素风格的图标，很有意思。它的 icon 也很多，还有 grass 风格的。",
-		"tags": [
-			"website",
-			"Icons"
-		],
+		"tags": ["website", "Icons"],
 		"stars": 3
 	},
 	{
@@ -93,9 +68,7 @@
 		"url": "https://www.awwwards.com/",
 		"logo": "https://assets.awwwards.com/assets/images/favicon.svg",
 		"description": "网站评选网站，你总能从这里发现惊艳的网站",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 3
 	},
 	{
@@ -103,9 +76,7 @@
 		"logo": "/images/share/5c9a8b7deb717c5f.svg",
 		"url": "https://www.404s.design/",
 		"description": "收集 404 设计的网站，无聊的时候可以看下。",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 3
 	},
 	{
@@ -113,9 +84,7 @@
 		"logo": "https://www.igloo.inc/assets/favicon32-af94112f.png",
 		"url": "https://www.igloo.inc/",
 		"description": "abeto 作品，非常酷炫",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -123,9 +92,7 @@
 		"logo": "https://abeto.co/assets/favicon32-11fb90a3.png",
 		"url": "https://abeto.co/",
 		"description": "无限绽开的花，飘荡的树叶，复古风格化",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -133,9 +100,7 @@
 		"logo": "https://messenger.abeto.co/assets/favicon32-BC0QIL61.png",
 		"url": "https://messenger.abeto.co/",
 		"description": "abeto 作品，卡通送信员在地球小镇上奔跑，联机在线，可换装",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -143,9 +108,7 @@
 		"logo": "https://summer-afternoon.vlucendo.com/assets/favicon32-e817b074.png",
 		"url": "https://summer-afternoon.vlucendo.com/",
 		"description": "夏日午后，小男孩在乡村公路上上游玩",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -153,9 +116,7 @@
 		"logo": "https://themonolithproject.net/assets/images-next/nose_logo.webp",
 		"url": "https://themonolithproject.net/",
 		"description": "奇幻宇宙的动画演绎，像看电影一样。“跨越多星之际，一座沉默的巨石碑悄然苏醒。“巨石碑计划”：每一次触碰，皆可重写现实。”",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 5
 	},
 	{
@@ -163,9 +124,7 @@
 		"logo": "https://www.makingsoftware.com/favicon.ico",
 		"url": "https://www.makingsoftware.com/",
 		"description": "面向软件设计和开发人员的参考手册。样式很棒的学习网站。",
-		"tags": [
-			"website"
-		],
+		"tags": ["website"],
 		"stars": 4
 	},
 	{
@@ -173,10 +132,7 @@
 		"logo": "/images/share/97859f1c57799dd2.png",
 		"url": "https://www.isocons.app/",
 		"description": "3D icons 网站，酷酷的，免费。",
-		"tags": [
-			"website",
-			"Icons"
-		],
+		"tags": ["website", "Icons"],
 		"stars": 3
 	}
 ]
