@@ -42,4 +42,3 @@ export async function pushAbout(data: AboutData): Promise<void> {
 
 	toast.success('发布成功！')
 }
-

@@ -25,7 +25,7 @@ export default function Home() {
 			<SocialButtons />
 			{/* {!maxSM && <ShareCard />} */}
 			<AritcleCard />
-			{ /* {!maxSM && <WriteButtons />} */ }
+			{/* {!maxSM && <WriteButtons />} */}
 			{/* <LikePosition /> */}
 		</div>
 	)

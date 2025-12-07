@@ -53,4 +53,3 @@ export async function batchDeleteBlogs(slugs: string[]): Promise<void> {
 
 	toast.success('删除成功！请等待页面部署后刷新')
 }
-

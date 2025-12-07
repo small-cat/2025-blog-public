@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
 			'*.svg': {
 				loaders: ['@svgr/webpack'],
 				as: '*.js'
-			},
+			}
 			// ...codeInspectorPlugin({
 			// 	bundler: 'turbopack'
 			// })

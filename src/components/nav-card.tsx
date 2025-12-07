@@ -60,13 +60,13 @@ const list = [
 		iconActive: ShareFilledSVG,
 		label: '好玩的项目',
 		href: '/share'
-	},	
+	},
 	{
 		icon: AboutOutlineSVG,
 		iconActive: AboutFilledSVG,
 		label: '个人简介',
 		href: '/about'
-	},
+	}
 ]
 
 const extraSize = 8

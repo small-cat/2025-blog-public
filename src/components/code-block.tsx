@@ -23,16 +23,10 @@ export function CodeBlock({ children, code }: CodeBlockProps) {
 
 	return (
 		<div className='code-block-wrapper'>
-			<button
-				type='button'
-				onClick={handleCopy}
-				className='code-block-copy-btn'
-				aria-label='Copy code'
-			>
+			<button type='button' onClick={handleCopy} className='code-block-copy-btn' aria-label='Copy code'>
 				{copied ? <Check size={16} /> : <Copy size={16} />}
 			</button>
 			{children}
 		</div>
 	)
 }
-

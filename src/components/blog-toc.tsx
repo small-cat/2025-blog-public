@@ -88,7 +88,7 @@ export function BlogToc({ toc, delay = 0 }: BlogTocProps) {
 			transition={{ delay }}
 			className='w-full rounded-xl border bg-white/40 p-3 text-sm'>
 			<h2 className='text-secondary mb-2 font-medium'>目录</h2>
-			<div className='relative space-y-2 max-h-[42vh] overflow-y-auto overflow-x-hidden pr-2 scroll-smooth'>
+			<div className='relative max-h-[42vh] space-y-2 overflow-x-hidden overflow-y-auto scroll-smooth pr-2'>
 				{/* {indicatorStyle.height > 0 && (
 					<motion.div
 						className='bg-brand/40 absolute left-0 w-1 rounded-full'

@@ -43,7 +43,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 			initial={{ opacity: 0, scale: 0.6 }}
 			{...(maxSM ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
 			className='card relative block overflow-hidden'>
-
 			<div>
 				<div className='mb-4 flex items-center gap-4'>
 					<div className='group relative'>
@@ -62,7 +61,7 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 							className={cn('group-hover:text-brand text-lg font-bold transition-colors focus:outline-none', canEdit && 'cursor-text')}>
 							{localBlogger.name}
 						</h3>
-						{(
+						{
 							<a
 								href={localBlogger.url}
 								target='_blank'
@@ -70,13 +69,11 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 								className='text-secondary hover:text-brand mt-1 block max-w-[200px] truncate text-xs hover:underline'>
 								{localBlogger.url}
 							</a>
-						)}
+						}
 					</div>
 				</div>
 
-				{(
-					<StarRating stars={localBlogger.stars} />
-				)}
+				{<StarRating stars={localBlogger.stars} />}
 
 				<p
 					contentEditable={canEdit}
@@ -96,7 +93,6 @@ export function BloggerCard({ blogger, isEditMode = false, onUpdate, onDelete }:
 					{localBlogger.description}
 				</p>
 			</div>
-
 		</motion.div>
 	)
 }
