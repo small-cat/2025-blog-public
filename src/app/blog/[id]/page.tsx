@@ -9,6 +9,7 @@ import { loadBlog, type BlogConfig } from '@/lib/load-blog'
 import { useReadArticles } from '@/hooks/use-read-articles'
 import LiquidGrass from '@/components/liquid-grass'
 import { Comments } from '@/components/comments'
+import { useBlogIndex } from '@/hooks/use-blog-index'
 
 export default function Page() {
 	const params = useParams() as { id?: string | string[] }
