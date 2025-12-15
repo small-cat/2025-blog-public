@@ -15,6 +15,14 @@
 		"tags": ["book"],
 		"stars": 3
 	},
+  {
+    "name": "Foundations of LLMs",
+    "url": "https://github.com/ZJU-LLMs/Foundations-of-LLMs",
+    "logo": "/images/github.png",
+    "description": "本书旨在为对大语言模型感兴趣的读者系统地讲解相关基础知识、介绍前沿技术。第一版包括传统语言模型、大语言模型架构演化、Prompt工程、参数高效微调、模型编辑、检索增强生成等六章内容。为增加本书的易读性，每章分别以一种动物为背景，对具体技术进行举例说明",
+    "tags": ["book"],
+    "stars": 3
+  },
 	{
 		"name": "klavis",
 		"url": "https://github.com/Klavis-AI/klavis",
