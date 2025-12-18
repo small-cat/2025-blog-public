@@ -8,6 +8,7 @@ import { useSize } from '@/hooks/use-size'
 export interface ColumnBlog {
 	id: string
 	name: string
+	avatar: string
 	tags: string[]
 	summary: string
 	catalogue: {
@@ -36,9 +37,17 @@ export function ColumnCard({ column }: ColumnCardProps) {
 				<div className='flex items-start gap-4'>
 					{/* Placeholder for image similar to ProjectCard - can be replaced with actual image if available */}
 					<div className='group relative'>
-						<div className='flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600'>
-							<span className='text-lg font-semibold text-white'>📚</span>
-						</div>
+						{column.avatar ? (
+							<img
+								src={column.avatar}
+								alt={column.name}
+								className='h-16 w-16 shrink-0 rounded-xl object-cover'
+							/>
+						) : (
+							<div className='flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600'>
+								<span className='text-lg font-semibold text-white'>📚</span>
+							</div>
+						)}
 					</div>
 
 					<div className='flex-1'>

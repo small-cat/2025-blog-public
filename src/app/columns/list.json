@@ -2,6 +2,7 @@
 	{
 		"id": "yocto-cookbook",
 		"name": "Yocto Cookbook",
+		"avatar": "",
 		"tags": ["building", "programming compiling", "linux"],
 		"summary": "Yocto 是一个基于 Linux 的开源项目，用于构建自定义的 Linux 发行版。本专栏详细介绍了 yocto 的使用方式，介绍了 yocto 中的一些核心概念，以及如何使用 yocto 构建自定义的 Linux 发行版。",
 		"catalogue": [
@@ -24,6 +25,40 @@
 				"id": "create-image-with-yocto",
 				"title": "如何使用 Yocto 构建自定义的 Linux 发行版",
 				"url": "/columns/yocto-cookbook/create-image-with-yocto"
+			}
+		]
+	},
+	{
+		"id": "daily-diary-notes",
+		"name": "心情小记",
+		"avatar": "images/columns/daily-diary-notes/cover.png",
+		"tags": ["情感", "随笔", "回忆"],
+		"summary": "记录所思，所想",
+		"catalogue": [
+			{
+				"id": "cognitive-upgrade",
+				"title": "认知升级",
+				"url": "/columns/daily-diary-notes/cognitive-upgrade"
+			},
+			{
+				"id": "methods-for-self-growth",
+				"title": "自我成长的方法",
+				"url": "/columns/daily-diary-notes/methods-for-self-growth"
+			},
+			{
+				"id": "about-myself",
+				"title": "无厘语录 - 我到底在干啥",
+				"url": "/columns/daily-diary-notes/about-myself"
+			},
+			{
+				"id": "jottings",
+				"title": "随笔20180923",
+				"url": "/columns/daily-diary-notes/jottings"
+			},
+			{
+				"id": "thinking-about-competition",
+				"title": "由竞争引发的一点思考",
+				"url": "/columns/daily-diary-notes/thinking-about-competition"
 			}
 		]
 	}
