@@ -24,6 +24,14 @@
     "stars": 3
   },
 	{
+		"name": "Build Your Own Lisp With C",
+		"url": "https://buildyourownlisp.com/contents",
+		"logo": "/images/share/build-your-own-list.webp",
+		"description": "一本面向初学者的免费英文电子书，介绍怎么用 C 语言写编译器，以 Lisp 语言的编译器为例",
+		"tags": ["book", "website", "compiler"],
+		"stars": 4
+	},
+	{
 		"name": "klavis",
 		"url": "https://github.com/Klavis-AI/klavis",
 		"logo": "/images/github.png",
