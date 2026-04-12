@@ -1,5 +1,16 @@
 [
   {
+    "title": "关于 AI 的一点思考（一）",
+    "tags": [
+      "AI",
+      "思考"
+    ],
+    "date": "2026-04-12",
+    "summary": "分享关于AI的一些思考和观点。",
+    "cover": "",
+    "slug": "ai-thoughts-1"
+  },
+  {
     "title": "transformer-intro",
     "tags": [
       "机器学习",
