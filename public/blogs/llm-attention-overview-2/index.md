@@ -6,8 +6,9 @@
 MHA通过线性变换将输入向量投影到多个不同的子空间(注意力头),每个头独立计算注意力权重,然  后将所有头的输出拼接起来。这种设计使得模型能够同时关注不同类型的特征(如语义、语法、位置 等),从而增强表示能力。
 
 **Formula:**  
-$$\text{MultiHead}(Q,K,V)=\text{Concat}(\text{head}_{1},...,\text{head}_{h})W^{O}, 
-where\ {head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$  
+$$\text{MultiHead}(Q,K,V)=\text{Concat}(\text{head}_{1},...,\text{head}_{h})W^{O}$$ 
+where
+$${head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$  
 
 ![](/images/blog/mha.png)
 

@@ -101,9 +101,9 @@ export function BlogToc({ toc, delay = 0 }: BlogTocProps) {
 					/>
 				)} */}
 				{toc.length === 0 && <div className='text-secondary'>暂无</div>}
-				{toc.map(item => (
+				{toc.map((item, index) => (
 					<a
-						key={item.id + item.level}
+						key={`${item.id}-${index}`}
 						href={`#${item.id}`}
 						className={clsx('hover:text-brand relative block pl-3 transition-colors', item.id === minActiveId && 'text-brand')}
 						style={{ paddingLeft: (item.level - 1) * 8 }}>

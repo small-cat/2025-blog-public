@@ -1,6 +1,7 @@
 import { marked } from 'marked'
 import type { Tokens } from 'marked'
 import { codeToHtml } from 'shiki'
+import katex from 'katex'
 
 export type TocItem = { id: string; text: string; level: number }
 
@@ -17,9 +18,52 @@ export function slugify(text: string): string {
 		.replace(/\s+/g, '-')
 }
 
+type MathEntry = { formula: string; display: boolean }
+
+function extractMathFormulas(markdown: string): { markdown: string; mathMap: Map<string, MathEntry> } {
+	const mathMap = new Map<string, MathEntry>()
+	let idx = 0
+
+	// Match display math ($$...$$) and inline math ($...$)
+	const mathRegex = /\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g
+
+	const processed = markdown.replace(mathRegex, (match, displayContent, inlineContent) => {
+		// Use triple backticks with unique markers - marked will preserve these as code spans
+		const key = `%%MATH${idx}%%`
+		if (displayContent !== undefined) {
+			// Display math $$...$$
+			mathMap.set(key, { formula: displayContent.trim(), display: true })
+		} else {
+			// Inline math $...$
+			mathMap.set(key, { formula: inlineContent, display: false })
+		}
+		idx++
+		// Wrap in backticks so marked treats it as code and preserves the placeholder
+		return `\`${key}\``
+	})
+
+	return { markdown: processed, mathMap }
+}
+
+function renderMathFormulas(html: string, mathMap: Map<string, MathEntry>): string {
+	for (const [key, { formula, display }] of mathMap) {
+		try {
+			const rendered = katex.renderToString(formula, { displayMode: display })
+			// Replace the code placeholder with KaTeX HTML
+			html = html.replace(new RegExp(`<code>${key}</code>`, 'g'), rendered)
+		} catch (e) {
+			console.error('KaTeX rendering error:', e)
+		}
+	}
+	return html
+}
+
 export async function renderMarkdown(markdown: string): Promise<MarkdownRenderResult> {
+	// Extract and replace math formulas with placeholders before parsing
+	const { markdown: mathProcessedMarkdown, mathMap } = extractMathFormulas(markdown)
+
 	// Parse tokens and extract TOC
-	const tokens = marked.lexer(markdown)
+	const tokens = marked.lexer(mathProcessedMarkdown)
 
 	// Parse TOC from markdown tokens, ignoring content inside code blocks
 	const toc: TocItem[] = []
@@ -100,7 +144,10 @@ export async function renderMarkdown(markdown: string): Promise<MarkdownRenderRe
 	marked.use({
 		renderer
 	})
-	const html = (marked.parser(tokens) as string) || ''
+	let html = (marked.parser(tokens) as string) || ''
+
+	// Restore rendered math formulas
+	html = renderMathFormulas(html, mathMap)
 
 	return { html, toc }
 }

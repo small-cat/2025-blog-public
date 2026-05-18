@@ -6,12 +6,14 @@
 
 每一个 allocation site 只有一个地址 $a_{malloc}$
 
-对于一个变量 x，符号化的地址表示为$a_x$。也就是说，x 的地址 &x 的标准化形式为 $a_x$，而表达式 x 的标准化形式为 $*a_x$，*x 的标准化表示形式为 $**a_x$
+对于一个变量 x，符号化的地址表示为 $a_x$ 。也就是说，x 的地址 &x 的标准化形式为 $a_x$，而表达式 x 的标准化形式为 $*a_x$，*x 的标准化表示形式为 $**a_x$
 
-$x = y \implies *a_x = *a_y \\
+$$
+x = y \implies *a_x = *a_y \\
 x = *y \implies *a_x = **a_y \\
 *x = *y \implies **a_x = **a_y \\
-*x = y \implies **a_x = *a_y$
+*x = y \implies **a_x = *a_y
+$$
 
 算法的核心数据结构为 PEG (Pointer expressin graph)
 - node 为 expression

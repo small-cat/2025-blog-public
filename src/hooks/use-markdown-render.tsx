@@ -3,6 +3,7 @@ import parse, { type HTMLReactParserOptions, Element, type DOMNode } from 'html-
 import { renderMarkdown, type TocItem } from '@/lib/markdown-renderer'
 import { MarkdownImage } from '@/components/markdown-image'
 import { CodeBlock } from '@/components/code-block'
+import 'katex/dist/katex.min.css'
 
 type MarkdownRenderResult = {
 	content: ReactElement | null

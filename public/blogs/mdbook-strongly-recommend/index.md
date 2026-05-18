@@ -184,7 +184,7 @@ cargo uninstall mdbook-theme
 cargo install mdbook-theme
 ```
 最后看下效果。
-![pagetoc fix](image/mdbook-pagetoc-fix.png)
+![pagetoc fix](/images/blog/mdbook-pagetoc-fix.png)
 最上面 `{comment}` 消失了。
 
 ## mdbook-private
@@ -214,7 +214,7 @@ chapter-prefix = "HID_"
 - [Chapter 2](./chapter_2.md)
 ```
 有两个章节，一个子章节。
-![private ori](image/mdbook-private-origin.png)
+![private ori](/images/blog/mdbook-private-origin.png)
 
 将 chapter 2 设置为 private
 ```
@@ -225,7 +225,7 @@ chapter-prefix = "HID_"
 - [Chapter 2](./HID_chapter_2.md)
 ```
 重新预览
-![mdbook private](image/mdbook-private-after.png)
+![mdbook private](/images/blog/mdbook-private-after.png)
 可以看到 chapter 2 被隐藏了。
 
 这个插件，当我们在展示的时候，可以很方便的帮助我们选择性的隐藏一些不能公开的章节。
@@ -241,7 +241,7 @@ cargo install mdbook-pandoc
 cargo install --git https://github.com/max-heller/mdbook-pandoc.git mdbook-pandoc
 ```
 在安装过程中，rustc 在编译 ureq-2.9.3 的时候出现了如下错误
-![ureq compile error](image/mdbook-ureq-error.png)
+![ureq compile error](/images/blog/mdbook-ureq-error.png)
 看下错误信息，是由于 Header 这个自定义结构体申明为 pub(crate), rustc 认为是 crate private 类型的，不能在后续那些函数中直接使用。我没写过 rust，不过错误信息很明显，那就将 Header 类型直接改成 pub 好了。将 Header 由 pub(crate) 改成 pub
 ```
 pub struct Header
@@ -294,7 +294,7 @@ fc-list
 mdbook build
 ```
 在 build-dir 所设置的目录中，就可以看到 `pandoc/pdf` 目录下生成的文件了。
-![pdf example](image/mdbook-pdf-example.png)
+![pdf example](/images/blog/mdbook-pdf-example.png)
 
 # 总结
 mdbook 是一个非常简洁的工具，几个简单的命令行即可开始你的写作之旅，帮助你快速将 markdown 文档转成你想要的格式，还能支持浏览器的实时预览。
